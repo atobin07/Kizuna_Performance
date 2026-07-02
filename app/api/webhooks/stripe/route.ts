@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { getStripe } from '@/lib/stripe'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/supabase/types'
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-)
+// Lazy service-role client — see analytics route for rationale.
+let serviceClient: SupabaseClient<Database> | null = null
+function getSupabase() {
+  if (!serviceClient) {
+    serviceClient = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
+    )
+  }
+  return serviceClient
+}
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -28,6 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const supabase = getSupabase()
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session

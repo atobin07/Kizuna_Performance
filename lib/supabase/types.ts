@@ -162,12 +162,15 @@ export type Database = {
       page_views: TableDef<PageView>
       events: TableDef<AnalyticsEvent>
     }
-    Views: Record<string, never>
-    Functions: Record<string, never>
+    // NOTE: use empty mapped types (no string index signature). A
+    // `Record<string, never>` here would intersect with Tables in postgrest's
+    // `Tables & Views` and collapse every row type to `never`.
+    Views: { [_ in never]: never }
+    Functions: { [_ in never]: never }
     Enums: {
       user_role: UserRole
       tier: Tier
     }
-    CompositeTypes: Record<string, never>
+    CompositeTypes: { [_ in never]: never }
   }
 }

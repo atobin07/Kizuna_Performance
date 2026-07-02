@@ -1,16 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import type { Database } from '@/lib/supabase/types'
 
-// Service role client — bypasses RLS for analytics writes.
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-)
+// Service-role client — bypasses RLS for analytics writes. Created lazily so a
+// missing env var can't crash the build's page-data collection.
+let serviceClient: SupabaseClient<Database> | null = null
+function getSupabase() {
+  if (!serviceClient) {
+    serviceClient = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
+    )
+  }
+  return serviceClient
+}
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabase()
     const body = await req.json()
     const { event_name, properties, session_id, user_id, path } = body
 
