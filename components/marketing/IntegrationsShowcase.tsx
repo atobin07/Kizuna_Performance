@@ -75,19 +75,20 @@ export function IntegrationsShowcase() {
           className="mx-auto max-w-2xl text-center"
         >
           <p className="mb-4 text-xs font-medium uppercase tracking-widest text-kin">
-            Beyond the gym
+            How the coaching works
           </p>
           <h2 className="font-display text-4xl font-bold tracking-tight text-washi sm:text-5xl md:text-6xl">
-            The bond doesn&apos;t end{' '}
-            <span className="text-gold-gradient">at the gym door.</span>
+            We deliver coaching{' '}
+            <span className="text-gold-gradient">through your data.</span>
           </h2>
           <p className="mt-6 text-lg text-muted-foreground">
-            The training and our bond are the work. Your data is how I stay in
-            it — reading your sleep, recovery and strain so I&apos;m coaching you
-            every day, not just on session days.
+            Connect the devices you already wear and Kizuna becomes a service
+            that runs every day — not just on session days. Your sleep, recovery
+            and strain flow straight to your coach, so every program, macro
+            target and check-in is built from what your body is actually doing.
           </p>
           <p className="mt-4 text-xs uppercase tracking-widest text-koke">
-            The coaching &amp; the bond are the product · the data is the service
+            The coaching &amp; the bond are the product · the data is how it&apos;s delivered
           </p>
         </motion.div>
 

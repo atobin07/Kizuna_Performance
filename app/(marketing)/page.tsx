@@ -4,7 +4,6 @@ import { Hero } from '@/components/marketing/Hero'
 import { Methodology } from '@/components/marketing/Methodology'
 import { StatsBand } from '@/components/marketing/StatsBand'
 import { Marquee } from '@/components/marketing/Marquee'
-import { Pricing } from '@/components/marketing/Pricing'
 import { Testimonials } from '@/components/marketing/Testimonials'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
 import { BookingCTA } from '@/components/marketing/BookingCTA'
@@ -25,6 +24,10 @@ export default function HomePage() {
     <>
       <Hero />
       <Marquee />
+
+      {/* Connections lead the story — data is how the service is delivered */}
+      <IntegrationsShowcase />
+
       <Methodology />
       <StatsBand />
 
@@ -50,10 +53,6 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
-
-      <IntegrationsShowcase />
-
-      <Pricing />
 
       {/* About preview */}
       <section className="grain relative overflow-hidden bg-card py-24 md:py-32">
