@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#0A0A0A"/>
-  <text x="50%" y="50%" dy="0.34em" text-anchor="middle" font-size="40" font-family="'Noto Sans JP','Inter',sans-serif" fill="#C4922A">絆</text>
+  <defs>
+    <linearGradient id="ink" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF6A2B"/>
+      <stop offset="0.5" stop-color="#E7B24C"/>
+      <stop offset="1" stop-color="#F6D488"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0B0B0C"/>
+  <circle cx="32" cy="32" r="26" fill="none" stroke="url(#ink)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="46 4 78 4 46"/>
+  <circle cx="32" cy="32" r="21.5" fill="none" stroke="url(#ink)" stroke-width="0.8" opacity="0.5"/>
+  <text x="32" y="32" dy="0.35em" text-anchor="middle" font-size="30" font-family="'Noto Sans JP','Inter',sans-serif" font-weight="700" fill="url(#ink)">絆</text>
 </svg>
