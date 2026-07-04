@@ -25,8 +25,11 @@ export default async function AppLayout({
   const items: SidebarNavItem[] = [
     { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { href: '/program', label: 'Program', icon: 'program' },
+    { href: '/food', label: 'Food', icon: 'food' },
+    { href: '/sleep', label: 'Sleep', icon: 'sleep' },
     { href: '/benchmarks', label: 'Benchmarks', icon: 'benchmarks' },
     { href: '/journal', label: 'Journal', icon: 'journal' },
+    { href: '/integrations', label: 'Integrations', icon: 'integrations' },
     { href: '/messages', label: 'Messages', icon: 'messages' },
     { href: '/assessments', label: 'Assessments', icon: 'assessments' },
   ]
