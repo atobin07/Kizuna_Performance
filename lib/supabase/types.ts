@@ -14,6 +14,8 @@ export type Json =
 
 export type UserRole = 'client' | 'coach' | 'admin'
 export type Tier = 'private' | 'semi_private'
+/** Self-serve app plan (distinct from 1:1 coaching `tier`). */
+export type Plan = 'base' | 'track' | 'perform' | 'coached'
 
 export type Profile = {
   id: string
@@ -21,9 +23,96 @@ export type Profile = {
   email: string | null
   role: UserRole
   tier: Tier | null
+  plan: Plan
   stripe_customer_id: string | null
   avatar_url: string | null
   onboarded_at: string | null
+  created_at: string
+}
+
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
+
+export type SleepLog = {
+  id: string
+  client_id: string | null
+  log_date: string
+  duration_min: number | null
+  quality: number | null
+  bedtime: string | null
+  wake_time: string | null
+  awakenings: number | null
+  notes: string | null
+  created_at: string
+}
+
+export type FoodLog = {
+  id: string
+  client_id: string | null
+  log_date: string
+  meal: MealType | null
+  name: string
+  quantity: string | null
+  calories: number | null
+  protein_g: number | null
+  carbs_g: number | null
+  fat_g: number | null
+  logged_at: string
+  created_at: string
+}
+
+export type NutritionTarget = {
+  client_id: string
+  calories: number | null
+  protein_g: number | null
+  carbs_g: number | null
+  fat_g: number | null
+  updated_at: string
+}
+
+export type IntegrationToken = {
+  id: string
+  client_id: string | null
+  token: string
+  label: string | null
+  created_at: string
+  last_used_at: string | null
+}
+
+export type ConnectionStatus = 'connected' | 'pending' | 'error' | 'revoked'
+
+export type WearableConnection = {
+  id: string
+  client_id: string | null
+  provider: string
+  status: ConnectionStatus
+  external_user_id: string | null
+  access_token: string | null
+  refresh_token: string | null
+  scopes: string | null
+  expires_at: string | null
+  connected_at: string
+  last_sync_at: string | null
+}
+
+export type WearableSampleType =
+  | 'sleep'
+  | 'hrv'
+  | 'resting_hr'
+  | 'steps'
+  | 'active_energy'
+  | 'workout'
+  | 'weight'
+
+export type WearableSample = {
+  id: string
+  client_id: string | null
+  provider: string
+  type: string
+  value: number | null
+  unit: string | null
+  start_at: string | null
+  end_at: string | null
+  metadata: Json
   created_at: string
 }
 
@@ -161,6 +250,12 @@ export type Database = {
       messages: TableDef<Message>
       page_views: TableDef<PageView>
       events: TableDef<AnalyticsEvent>
+      sleep_logs: TableDef<SleepLog>
+      food_logs: TableDef<FoodLog>
+      nutrition_targets: TableDef<NutritionTarget>
+      integration_tokens: TableDef<IntegrationToken>
+      wearable_connections: TableDef<WearableConnection>
+      wearable_samples: TableDef<WearableSample>
     }
     // NOTE: use empty mapped types (no string index signature). A
     // `Record<string, never>` here would intersect with Tables in postgrest's
@@ -170,6 +265,7 @@ export type Database = {
     Enums: {
       user_role: UserRole
       tier: Tier
+      plan: Plan
     }
     CompositeTypes: { [_ in never]: never }
   }
