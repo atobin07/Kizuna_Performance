@@ -15,12 +15,14 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Kizuna brand tokens
-        sumi: '#0A0A0A',
-        kin: '#C4922A',
-        aka: '#8B2E2E',
-        washi: '#F4F1EC',
-        koke: '#3D3A35',
+        // Kizuna brand tokens — Refined Sumi & Gold
+        sumi: '#0B0B0C',
+        kin: '#E7B24C',
+        bronze: '#B8862F',
+        ember: '#FF6A2B',
+        aka: '#9A3325',
+        washi: '#F2EEE6',
+        koke: '#45413A',
         // shadcn/ui semantic tokens (mapped to CSS vars)
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -58,6 +60,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Bricolage Grotesque', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       letterSpacing: {

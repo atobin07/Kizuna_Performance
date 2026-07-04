@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,37 +6,38 @@
 
 @layer base {
   :root {
-    /* shadcn semantic tokens — dark-first Kizuna theme.
-       Brand: sumi #0A0A0A, kin #C4922A, aka #8B2E2E, washi #F4F1EC, koke #3D3A35 */
-    --background: 0 0% 4%; /* sumi */
-    --foreground: 40 30% 94%; /* washi */
+    /* Kizuna — Refined Sumi & Gold.
+       sumi #0B0B0C · kin #E7B24C · bronze #B8862F · ember #FF6A2B
+       aka #9A3325 · washi #F2EEE6 · koke #45413A */
+    --background: 240 5% 4%; /* sumi */
+    --foreground: 40 33% 92%; /* washi */
 
-    --card: 0 0% 6%;
-    --card-foreground: 40 30% 94%;
+    --card: 240 5% 7%;
+    --card-foreground: 40 33% 92%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 40 30% 94%;
+    --popover: 240 6% 6%;
+    --popover-foreground: 40 33% 92%;
 
-    --primary: 39 65% 47%; /* kin */
-    --primary-foreground: 0 0% 4%;
+    --primary: 39 76% 60%; /* kin */
+    --primary-foreground: 240 5% 4%;
 
-    --secondary: 0 50% 36%; /* aka */
-    --secondary-foreground: 40 30% 94%;
+    --secondary: 8 55% 40%; /* aka */
+    --secondary-foreground: 40 33% 92%;
 
-    --muted: 45 6% 22%; /* koke */
-    --muted-foreground: 45 6% 65%;
+    --muted: 42 8% 24%; /* koke */
+    --muted-foreground: 42 8% 64%;
 
-    --accent: 39 65% 47%;
-    --accent-foreground: 0 0% 4%;
+    --accent: 39 76% 60%;
+    --accent-foreground: 240 5% 4%;
 
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 40 30% 94%;
+    --destructive: 8 62% 42%;
+    --destructive-foreground: 40 33% 92%;
 
-    --border: 45 6% 18%;
-    --input: 45 6% 18%;
-    --ring: 39 65% 47%;
+    --border: 40 7% 15%;
+    --input: 40 7% 15%;
+    --ring: 39 76% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
   }
 }
 
@@ -48,6 +49,10 @@
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: 'ss01', 'cv01', 'cv03';
   }
+  ::selection {
+    background: #e7b24c;
+    color: #0b0b0c;
+  }
 }
 
 @layer utilities {
@@ -56,5 +61,68 @@
   }
   .kanji {
     font-family: 'Noto Sans JP', 'Inter', sans-serif;
+  }
+  .font-display {
+    font-family: 'Bricolage Grotesque', 'Inter', sans-serif;
+  }
+
+  /* Ember → gold gradient text for signature words. */
+  .text-gold-gradient {
+    background: linear-gradient(100deg, #ff6a2b 0%, #e7b24c 45%, #f6d488 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Soft radial gold glow — place behind hero elements. */
+  .glow-gold {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(231, 178, 76, 0.22) 0%,
+      rgba(255, 106, 43, 0.08) 40%,
+      transparent 70%
+    );
+  }
+
+  .hairline {
+    border-color: rgba(231, 178, 76, 0.35);
+  }
+
+  /* Fine film grain overlay for depth (fixed, non-interactive). */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+
+  .mask-fade-r {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@keyframes draw-seal {
+  from {
+    stroke-dashoffset: var(--len, 700);
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
