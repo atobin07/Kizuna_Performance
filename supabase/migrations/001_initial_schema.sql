@@ -1,5 +1,4 @@
 -- Kizuna Performance — initial schema
--- Enable UUID extension
 create extension if not exists "uuid-ossp";
 
 -- PROFILES
@@ -15,11 +14,24 @@ create table profiles (
   created_at timestamptz default now()
 );
 alter table profiles enable row level security;
+
+-- Staff check as SECURITY DEFINER to avoid RLS recursion on profiles.
+create or replace function public.is_staff()
+returns boolean
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role in ('coach', 'admin')
+  );
+$$;
+
 create policy "Users can read own profile" on profiles for select using (auth.uid() = id);
 create policy "Users can update own profile" on profiles for update using (auth.uid() = id);
-create policy "Coaches can read all profiles" on profiles for select using (
-  exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('coach', 'admin'))
-);
+create policy "Coaches can read all profiles" on profiles for select using (public.is_staff());
 
 -- PROGRAMS
 create table programs (
@@ -34,9 +46,7 @@ create table programs (
 );
 alter table programs enable row level security;
 create policy "Clients see own programs" on programs for select using (auth.uid() = client_id);
-create policy "Coaches manage all programs" on programs for all using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches manage all programs" on programs for all using (public.is_staff());
 
 -- WORKOUTS
 create table workouts (
@@ -53,9 +63,7 @@ alter table workouts enable row level security;
 create policy "Clients see own workouts" on workouts for select using (
   exists (select 1 from programs where id = workouts.program_id and client_id = auth.uid())
 );
-create policy "Coaches manage all workouts" on workouts for all using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches manage all workouts" on workouts for all using (public.is_staff());
 
 -- WORKOUT RESULTS
 create table workout_results (
@@ -69,9 +77,7 @@ create table workout_results (
 );
 alter table workout_results enable row level security;
 create policy "Clients manage own results" on workout_results for all using (auth.uid() = client_id);
-create policy "Coaches read all results" on workout_results for select using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches read all results" on workout_results for select using (public.is_staff());
 
 -- BENCHMARKS
 create table benchmarks (
@@ -86,9 +92,7 @@ create table benchmarks (
 );
 alter table benchmarks enable row level security;
 create policy "Clients manage own benchmarks" on benchmarks for all using (auth.uid() = client_id);
-create policy "Coaches read all benchmarks" on benchmarks for select using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches read all benchmarks" on benchmarks for select using (public.is_staff());
 
 -- ASSESSMENTS
 create table assessments (
@@ -103,9 +107,7 @@ create table assessments (
 );
 alter table assessments enable row level security;
 create policy "Clients read own assessments" on assessments for select using (auth.uid() = client_id);
-create policy "Coaches manage all assessments" on assessments for all using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches manage all assessments" on assessments for all using (public.is_staff());
 
 -- JOURNAL ENTRIES
 create table journal_entries (
@@ -122,9 +124,7 @@ create table journal_entries (
 );
 alter table journal_entries enable row level security;
 create policy "Clients manage own journal" on journal_entries for all using (auth.uid() = client_id);
-create policy "Coaches read all journals" on journal_entries for select using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches read all journals" on journal_entries for select using (public.is_staff());
 
 -- MESSAGES
 create table messages (
@@ -158,9 +158,7 @@ create table page_views (
 );
 alter table page_views enable row level security;
 create policy "Only service role inserts" on page_views for insert with check (false);
-create policy "Coaches read analytics" on page_views for select using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches read analytics" on page_views for select using (public.is_staff());
 
 -- ANALYTICS: CUSTOM EVENTS
 create table events (
@@ -173,9 +171,7 @@ create table events (
 );
 alter table events enable row level security;
 create policy "Only service role inserts events" on events for insert with check (false);
-create policy "Coaches read events" on events for select using (
-  exists (select 1 from profiles where id = auth.uid() and role in ('coach', 'admin'))
-);
+create policy "Coaches read events" on events for select using (public.is_staff());
 
 -- Helpful indexes
 create index idx_workouts_program on workouts(program_id);
