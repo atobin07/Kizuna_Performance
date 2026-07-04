@@ -4,6 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/marketing/Logo'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics'
 
@@ -15,35 +16,40 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false)
+  const [scrolled, setScrolled] = React.useState(false)
 
-  const handleCta = () => {
-    track('nav_cta_click', { label: 'Book a Call' })
-  }
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const handleCta = () => track('nav_cta_click', { label: 'Book a Call' })
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-sumi/90 backdrop-blur supports-[backdrop-filter]:bg-sumi/70">
-      <div className="container flex h-16 items-center justify-between">
-        {/* Wordmark */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5"
-          onClick={() => setOpen(false)}
-        >
-          <span className="kanji text-2xl leading-none text-kin">絆</span>
-          <span className="tracked-caps text-sm font-bold text-washi">
-            Kizuna Performance
-          </span>
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full transition-colors duration-300',
+        scrolled || open
+          ? 'border-b border-border bg-sumi/85 backdrop-blur supports-[backdrop-filter]:bg-sumi/65'
+          : 'border-b border-transparent bg-transparent'
+      )}
+    >
+      <div className="container flex h-[4.5rem] items-center justify-between">
+        <Link href="/" onClick={() => setOpen(false)} aria-label="Kizuna Performance home">
+          <Logo size={38} />
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-9 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="tracked-caps text-xs font-medium text-muted-foreground transition-colors hover:text-kin"
+              className="group relative text-xs font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:text-washi"
             >
               {link.label}
+              <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-kin transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
           <Button asChild size="sm" onClick={handleCta}>
@@ -51,7 +57,6 @@ export function Navbar() {
           </Button>
         </nav>
 
-        {/* Mobile toggle */}
         <button
           type="button"
           aria-label="Toggle menu"
@@ -63,7 +68,6 @@ export function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       <div
         className={cn(
           'overflow-hidden border-t border-border bg-sumi transition-[max-height] duration-300 ease-in-out md:hidden',
@@ -76,7 +80,7 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="tracked-caps py-3 text-sm font-medium text-muted-foreground transition-colors hover:text-kin"
+              className="py-3 text-sm font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:text-kin"
             >
               {link.label}
             </Link>

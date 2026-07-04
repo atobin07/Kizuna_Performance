@@ -1,4 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
+'use client'
+
+import { motion } from 'framer-motion'
 
 const PILLARS = [
   {
@@ -29,39 +31,54 @@ const PILLARS = [
 
 export function Methodology() {
   return (
-    <section id="method" className="scroll-mt-16 bg-sumi py-20 md:py-28">
-      <div className="container">
-        <div className="mb-14 max-w-2xl">
-          <p className="tracked-caps mb-4 text-xs font-medium text-kin">
-            The Method
+    <section id="method" className="grain relative scroll-mt-20 overflow-hidden bg-sumi py-24 md:py-32">
+      <div className="container relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16 max-w-2xl"
+        >
+          <p className="mb-4 text-xs font-medium uppercase tracking-widest text-kin">
+            絆 · The Method
           </p>
-          <h2 className="text-3xl font-black tracking-tight text-washi sm:text-4xl md:text-5xl">
-            Four pillars. One durable athlete.
+          <h2 className="font-display text-4xl font-bold tracking-tight text-washi sm:text-5xl md:text-6xl">
+            Four pillars.
+            <br />
+            <span className="text-gold-gradient">One durable athlete.</span>
           </h2>
-          <p className="mt-5 text-lg text-muted-foreground">
-            Precision meets grit. Every program we write stands on the same
-            structural principles.
+          <p className="mt-6 text-lg text-muted-foreground">
+            Precision meets grit — with recovery coached as seriously as the
+            barbell. Every program stands on the same four principles.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {PILLARS.map((pillar) => (
-            <Card
+        <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2">
+          {PILLARS.map((pillar, i) => (
+            <motion.div
               key={pillar.num}
-              className="border-border bg-card transition-colors hover:border-kin/40"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative overflow-hidden bg-sumi p-8 transition-colors duration-300 hover:bg-card md:p-10"
             >
-              <CardContent className="p-8">
-                <span className="kanji font-mono text-2xl font-bold text-kin">
+              {/* Gold sweep on hover */}
+              <span className="absolute left-0 top-0 h-full w-0.5 bg-gradient-to-b from-ember to-kin opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+              <div className="flex items-baseline gap-5">
+                <span className="font-display text-4xl font-bold text-koke transition-colors duration-300 group-hover:text-kin">
                   {pillar.num}
                 </span>
-                <h3 className="mt-5 text-xl font-bold tracking-tight text-washi">
+                <h3 className="font-display text-2xl font-bold tracking-tight text-washi">
                   {pillar.title}
                 </h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">
-                  {pillar.description}
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+              <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
+                {pillar.description}
+              </p>
+            </motion.div>
           ))}
         </div>
       </div>

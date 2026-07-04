@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Instagram, Linkedin } from 'lucide-react'
+import { Logo } from '@/components/marketing/Logo'
 
 const NAV_LINKS = [
   { label: 'About', href: '/about' },
@@ -14,11 +15,8 @@ export function Footer() {
       <div className="container py-14">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <Link href="/" className="flex items-center gap-2.5">
-              <span className="kanji text-2xl leading-none text-kin">絆</span>
-              <span className="tracked-caps text-sm font-bold text-washi">
-                Kizuna Performance
-              </span>
+            <Link href="/" aria-label="Kizuna Performance home">
+              <Logo size={40} />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Elite movement. Built to last. Precision coaching rooted in the
