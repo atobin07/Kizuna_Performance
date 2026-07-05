@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Credentials } from '@/components/marketing/Credentials'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -33,6 +34,8 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+
+      <Credentials />
 
       <article className="bg-sumi py-20 md:py-28">
         <div className="container max-w-3xl space-y-16">

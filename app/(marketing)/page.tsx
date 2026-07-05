@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Hero } from '@/components/marketing/Hero'
 import { Methodology } from '@/components/marketing/Methodology'
 import { Disciplines } from '@/components/marketing/Disciplines'
+import { Credentials } from '@/components/marketing/Credentials'
 import { StatsBand } from '@/components/marketing/StatsBand'
 import { Marquee } from '@/components/marketing/Marquee'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
@@ -27,6 +28,7 @@ export default function HomePage() {
 
       <Methodology />
       <Disciplines />
+      <Credentials />
       <StatsBand />
 
       {/* Interactive hook — the lead magnet */}
