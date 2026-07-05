@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'From the discipline of the Japanese kitchen to the training room. The shokunin philosophy behind Kizuna Performance and what the bond (絆) really means.',
+    'Kizuna Performance is expert, data-driven coaching in Virginia Beach — training, nutrition, sleep and supplementation coached together for marathons, lifting, adventure racing and lifelong durability.',
 }
 
 export default function AboutPage() {
@@ -17,74 +17,93 @@ export default function AboutPage() {
           aria-hidden
           className="kanji pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 select-none text-[24rem] font-bold leading-none text-washi/[0.03]"
         >
-          職人
+          絆
         </span>
         <div className="container relative z-10 max-w-3xl">
           <p className="tracked-caps mb-5 text-xs font-medium text-kin">
-            Our Story
+            Who we are
           </p>
           <h1 className="text-4xl font-black leading-[1.05] tracking-tight text-washi sm:text-6xl">
-            The craft came first.
+            Expert coaching for the long game.
           </h1>
           <p className="mt-8 text-xl leading-relaxed text-muted-foreground">
-            Kizuna Performance did not begin in a gym. It began in a kitchen —
-            in the exacting, unforgiving world of Japanese cuisine, where
-            mastery is measured in decades and nothing is left to chance.
+            Kizuna Performance is data-driven, whole-health coaching out of
+            Virginia Beach — for marathoners, lifters, adventure racers, and
+            anyone training to move well for life.
           </p>
         </div>
       </section>
 
       <article className="bg-sumi py-20 md:py-28">
         <div className="container max-w-3xl space-y-16">
-          {/* Section: shokunin */}
+          {/* Section: what we do */}
           <section>
             <p className="tracked-caps mb-4 text-xs font-medium text-kin">
-              職人 · Shokunin
+              What we do
             </p>
             <h2 className="text-3xl font-black tracking-tight text-washi sm:text-4xl">
-              What the kitchen taught
+              We&apos;re expert trainers — for the whole athlete
             </h2>
             <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                In Japan, the <span className="text-washi">shokunin</span> is the
-                artisan who commits a lifetime to a single craft — and who feels
-                a duty not merely to a customer, but to the work itself. The
-                shokunin sharpens the same knife, breaks down the same fish, and
-                refines the same cut thousands of times until the motion becomes
-                invisible and the result becomes inevitable.
+                We coach the entire system, not just the hour you spend under the
+                bar. The training matters — but so do the things that decide
+                whether the training actually works: how you eat, how you sleep,
+                how you recover, and what you put in your body.
               </p>
               <p>
-                Our founder spent years inside that discipline: an apprenticeship
-                built on repetition, patience, and an absolute intolerance for
-                cutting corners. You clean before you cut. You cut before you
-                cook. Responsibility is earned slowly, and the fundamentals are
-                never beneath you.
+                Whether you&apos;re chasing a marathon PR, a competition total, an
+                adventure race, or simply a strong body that holds up for decades,
+                we build the plan around all of it — and we hold ourselves to an
+                expert standard on every piece.
               </p>
             </div>
           </section>
 
-          {/* Section: the pivot */}
+          {/* Section: whole-health / longevity */}
           <section>
             <p className="tracked-caps mb-4 text-xs font-medium text-kin">
-              The Turn
+              Beyond the gym
             </p>
             <h2 className="text-3xl font-black tracking-tight text-washi sm:text-4xl">
-              From mastery of food to mastery of movement
+              Nutrition, sleep and supplements — the things that move the needle
             </h2>
             <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                The move from the kitchen to performance coaching was not a
-                departure — it was the same philosophy pointed at a new medium.
-                A body, like a craft, rewards attention and punishes shortcuts.
-                The athletes who move well at sixty are not the ones who chased
-                the most exotic programs; they are the ones who practiced the
-                fundamentals with intent, year after year.
+                Most programs stop at sets and reps. We don&apos;t. We understand
+                nutrition and how to fuel the goal in front of you. We treat sleep
+                as a training input — and we know how to improve it. And we give
+                honest, evidence-based guidance on supplementation, cutting
+                through the noise instead of adding to it.
               </p>
               <p>
-                So we coach the way a craft is taught. Load earns load. Range
-                earns range. Every rep is either a foundation or a liability, and
-                we refuse to build liabilities. Progress is engineered, never
-                gambled.
+                Longevity isn&apos;t one habit — it&apos;s all of them, coached
+                together. That&apos;s the difference between a program that peaks
+                and a life that stays strong.
+              </p>
+            </div>
+          </section>
+
+          {/* Section: data-driven */}
+          <section>
+            <p className="tracked-caps mb-4 text-xs font-medium text-kin">
+              How we do it
+            </p>
+            <h2 className="text-3xl font-black tracking-tight text-washi sm:text-4xl">
+              We coach through your data
+            </h2>
+            <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted-foreground">
+              <p>
+                We leverage the wearables and tools you already use. Your sleep,
+                recovery, strain and readiness flow straight to us — so your
+                program adapts to what your body is actually doing, not to a
+                template written weeks ago.
+              </p>
+              <p>
+                It means we know where you are and what you need before you walk
+                in, so every minute we spend together goes to exactly the right
+                work. Coaching that keeps up with your life, every day — not just
+                on session days.
               </p>
             </div>
           </section>
@@ -101,14 +120,13 @@ export default function AboutPage() {
               <p>
                 <span className="kanji text-washi">絆</span> — kizuna — is the
                 bond between people: the connection forged through shared
-                commitment and time. Mastery is never a solo act. It is
-                transmitted, coach to athlete, the way a craft passes from one
-                generation to the next.
+                commitment and time. It&apos;s the reason the data matters and the
+                reason the coaching works.
               </p>
               <p>
                 That is the relationship we build. Not a transaction measured in
-                sessions, but a partnership measured in years — precise, honest,
-                and built to last.
+                sessions, but a partnership measured in years — and we stay in
+                your corner for all of them.
               </p>
             </div>
           </section>
@@ -116,7 +134,7 @@ export default function AboutPage() {
           {/* Section: philosophy */}
           <section>
             <p className="tracked-caps mb-4 text-xs font-medium text-kin">
-              The Philosophy
+              The standard
             </p>
             <h2 className="text-3xl font-black tracking-tight text-washi sm:text-4xl">
               Precision meets grit
@@ -126,8 +144,8 @@ export default function AboutPage() {
                 We train hard — but hard is not the point. Intelligent is the
                 point. We build movement from the joints outward, load exactly
                 enough to force adaptation, and treat recovery as training rather
-                than the gap between it. The aim is not a single peak you fall
-                off of, but a high plateau you can hold for decades.
+                than the gap between it. The aim is not a single peak you fall off
+                of, but a high plateau you can hold for decades.
               </p>
               <p>
                 Elite movement. Built to last. It is not a slogan — it is the
