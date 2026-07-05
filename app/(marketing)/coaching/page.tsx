@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 const ONBOARDING = [
   {
     num: '01',
-    title: 'Discovery call',
+    title: 'Apply & connect',
     description:
-      'A direct conversation about your goals, history, and timeline — and a straight answer on whether we are the right fit to take you further.',
+      'You apply, then we talk it through — your goals, history, and timeline, and a straight answer on whether we are the right fit. Spots are limited by design.',
   },
   {
     num: '02',
@@ -101,7 +101,7 @@ export default function CoachingPage() {
 
           <div className="mt-14">
             <Button asChild size="lg">
-              <Link href="/book">Book Discovery Call</Link>
+              <Link href="/book">Apply for a spot</Link>
             </Button>
           </div>
         </div>

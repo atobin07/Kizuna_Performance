@@ -26,7 +26,7 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const handleCta = () => track('nav_cta_click', { label: 'Book a Call' })
+  const handleCta = () => track('nav_cta_click', { label: 'Apply' })
 
   return (
     <header
@@ -54,7 +54,7 @@ export function Navbar() {
             </Link>
           ))}
           <Button asChild size="sm" onClick={handleCta}>
-            <Link href="/book">Book a Call</Link>
+            <Link href="/book">Apply</Link>
           </Button>
         </nav>
 
@@ -94,7 +94,7 @@ export function Navbar() {
               setOpen(false)
             }}
           >
-            <Link href="/book">Book a Call</Link>
+            <Link href="/book">Apply</Link>
           </Button>
         </nav>
       </div>

@@ -159,7 +159,7 @@ export default function AboutPage() {
 
           <div className="flex flex-col gap-4 border-t border-border pt-12 sm:flex-row">
             <Button asChild size="lg">
-              <Link href="/book">Book Discovery Call</Link>
+              <Link href="/book">Apply for a spot</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/coaching">See how we coach</Link>

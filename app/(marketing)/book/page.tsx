@@ -3,9 +3,9 @@ import { ClipboardList, PhoneCall, Compass, Check } from 'lucide-react'
 import { BookingForm } from '@/components/marketing/BookingForm'
 
 export const metadata: Metadata = {
-  title: 'Book a Discovery Call',
+  title: 'Apply for Coaching',
   description:
-    'Book your Kizuna Performance discovery call — a direct conversation for athletes ready to reach their next level, and whether we are the right fit to get you there.',
+    'Apply for a spot with Kizuna Performance. Built on connection, we take a limited number of athletes — a direct conversation to see whether we are the right fit to reach your next level.',
 }
 
 const STEPS = [
@@ -40,12 +40,13 @@ export default function BookPage() {
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <span className="kanji text-3xl text-kin">絆</span>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-washi sm:text-5xl">
-            Take it to the next level
+            Apply for a spot
           </h1>
           <p className="mt-5 text-lg text-muted-foreground">
-            A direct conversation for athletes ready to raise their ceiling. We
-            map where you are, where you are going, and whether we are the right
-            fit to get you there.
+            This is built on connection — so I only coach a limited number of
+            athletes at a time. Apply below and we&apos;ll map where you are,
+            where you are going, and whether we are the right fit to get you
+            there.
           </p>
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-border bg-card px-5 py-2 text-xs font-medium uppercase tracking-widest text-kin">
             <span>Selective coaching</span>
@@ -59,7 +60,7 @@ export default function BookPage() {
           <div className="space-y-12">
             <div>
               <p className="tracked-caps mb-6 text-xs font-medium text-kin">
-                How the call works
+                How it works
               </p>
               <ol className="space-y-7">
                 {STEPS.map((s, i) => {

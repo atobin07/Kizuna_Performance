@@ -7,7 +7,7 @@ const NAV_LINKS = [
   { label: 'Coaching', href: '/coaching' },
   { label: 'Free Tools', href: '/tools' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Book', href: '/book' },
+  { label: 'Apply', href: '/book' },
 ]
 
 export function Footer() {

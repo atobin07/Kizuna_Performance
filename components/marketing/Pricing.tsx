@@ -128,7 +128,7 @@ export function Pricing() {
                     track('pricing_cta_click', { tier: tier.id })
                   }
                 >
-                  <Link href="/book">Book Discovery Call</Link>
+                  <Link href="/book">Apply for a spot</Link>
                 </Button>
               </CardFooter>
             </Card>

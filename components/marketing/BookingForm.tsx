@@ -84,11 +84,12 @@ export function BookingForm() {
           <Check className="h-7 w-7 text-kin" />
         </div>
         <h2 className="mt-6 text-2xl font-black tracking-tight text-washi">
-          Request received.
+          Application received.
         </h2>
         <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-          Thank you. We will reach out within one business day to schedule your
-          discovery call. Keep an eye on your inbox.
+          I review every application personally. If it looks like a fit, I will
+          reach out within one business day to set up your call. Keep an eye on
+          your inbox.
         </p>
       </div>
     )
@@ -172,7 +173,7 @@ export function BookingForm() {
       {error && <p className="text-sm text-aka">{error}</p>}
 
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Submitting…' : 'Request My Discovery Call'}
+        {isSubmitting ? 'Submitting…' : 'Apply for a spot'}
       </Button>
       <p className="text-center text-xs text-muted-foreground">
         Every request is reviewed personally. We reply within one business day.

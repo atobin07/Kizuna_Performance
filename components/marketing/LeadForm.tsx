@@ -64,7 +64,7 @@ export function LeadForm({
         </h3>
         <p className="mx-auto mt-2 max-w-md text-muted-foreground">{successBody}</p>
         <Button asChild size="lg" variant="outline" className="mt-6">
-          <Link href="/book">Ready now? Book a call</Link>
+          <Link href="/book">Ready now? Apply for a spot</Link>
         </Button>
       </div>
     )

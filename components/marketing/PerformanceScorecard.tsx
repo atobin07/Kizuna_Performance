@@ -305,7 +305,7 @@ export function PerformanceScorecard() {
                   onClick={() => track('cta_click', { location: 'scorecard_result' })}
                 >
                   <Link href="/book">
-                    Raise your score — book a call
+                    Raise your score — apply for a spot
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </Link>
                 </Button>

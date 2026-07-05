@@ -90,11 +90,11 @@ export function Hero() {
               size="lg"
               className="group shadow-[0_0_40px_-12px_rgba(231,178,76,0.6)]"
               onClick={() =>
-                track('cta_click', { label: 'Book Discovery Call', location: 'hero' })
+                track('cta_click', { label: 'Apply for a spot', location: 'hero' })
               }
             >
               <Link href="/book">
-                Book Discovery Call
+                Apply for a spot
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </Button>

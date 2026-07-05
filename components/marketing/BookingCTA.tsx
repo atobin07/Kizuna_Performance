@@ -33,9 +33,10 @@ export function BookingCTA() {
           <span className="text-gold-gradient">in twenty years.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          One direct conversation. I&apos;ll learn where you are, show you what
-          your data can do, and tell you straight what your next level looks
-          like — and whether we&apos;re the right fit to get you there.
+          This is built on connection, so I only take a limited number of
+          athletes at a time. Apply, and we&apos;ll talk it through — where you
+          are, what your data can do, and whether we&apos;re the right fit to get
+          you there.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
@@ -45,7 +46,7 @@ export function BookingCTA() {
             onClick={() => track('cta_click', { location: 'booking_band' })}
           >
             <Link href="/book">
-              Book a discovery call
+              Apply for a spot
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </Button>
@@ -54,7 +55,7 @@ export function BookingCTA() {
           </Button>
         </div>
         <p className="mt-6 text-sm text-washi/60">
-          For athletes ready to commit to their next level.
+          Limited roster · applications reviewed personally.
         </p>
       </div>
     </section>
