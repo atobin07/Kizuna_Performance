@@ -7,6 +7,7 @@ import { ArrowUpRight, Flame } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { LeadForm } from '@/components/marketing/LeadForm'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics'
 import {
@@ -251,6 +252,18 @@ export function MacroCalculator() {
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
               </Button>
+
+              <div className="mt-4 border-t border-border pt-4">
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Or have your blueprint emailed to you:
+                </p>
+                <LeadForm
+                  source="macro"
+                  cta="Email me my macros"
+                  successTitle="Sent."
+                  successBody="Your macro blueprint is on its way to your inbox."
+                />
+              </div>
             </div>
           </motion.div>
         ) : (

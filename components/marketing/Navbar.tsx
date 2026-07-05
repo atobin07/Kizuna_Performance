@@ -11,6 +11,7 @@ import { track } from '@/lib/analytics'
 const NAV_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Coaching', href: '/coaching' },
+  { label: 'Free Tools', href: '/tools' },
   { label: 'Blog', href: '/blog' },
 ]
 

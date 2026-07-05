@@ -5,6 +5,7 @@ import { Logo } from '@/components/marketing/Logo'
 const NAV_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Coaching', href: '/coaching' },
+  { label: 'Free Tools', href: '/tools' },
   { label: 'Blog', href: '/blog' },
   { label: 'Book', href: '/book' },
 ]

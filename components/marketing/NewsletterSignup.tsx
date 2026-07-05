@@ -59,8 +59,8 @@ export function NewsletterSignup() {
             Join The Bond
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Training principles, recovery science, and the occasional shokunin
-            note on mastery. No noise.
+            Training principles, recovery science, and field notes on getting
+            durable. No noise.
           </p>
 
           <form
