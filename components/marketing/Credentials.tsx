@@ -27,6 +27,7 @@ const INFLUENCES = [
   { name: 'Kelly Starrett', method: 'Supple Leopard · mobility' },
   { name: 'Dr. Andreo Spina', method: 'Functional Range Conditioning' },
   { name: 'Christopher Sommer', method: 'GymnasticBodies · gymnastics' },
+  { name: 'Carl Paoli', method: 'freestyle · movement mechanics' },
   { name: 'Burgener Strength', method: 'Olympic lifting' },
   { name: 'Phil Maffetone', method: 'aerobic (MAF) training' },
   { name: 'The Oxygen Advantage', method: 'functional breathing' },
