@@ -12,18 +12,22 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics'
 
-const TIERS = [
-  { value: 'private', label: '1-on-1 Private' },
-  { value: 'semi-private', label: 'Semi-Private Group' },
-  { value: 'undecided', label: 'Not sure yet' },
+const GOALS = [
+  { value: 'endurance', label: 'Marathon / Endurance' },
+  { value: 'strength', label: 'Lifting Competition (Powerlifting / Olympic)' },
+  { value: 'adventure', label: 'Adventure / Obstacle Race' },
+  { value: 'longevity', label: 'Longevity / Whole-Health Fitness' },
+  { value: 'other', label: 'Something else' },
 ] as const
 
 const schema = z.object({
   name: z.string().min(2, 'Please enter your name'),
   email: z.string().email('Enter a valid email address'),
   phone: z.string().optional(),
-  goals: z.string().min(10, 'Tell us a little about your goals'),
-  tier: z.enum(['private', 'semi-private', 'undecided']),
+  goal: z.string().refine((v) => GOALS.some((g) => g.value === v), {
+    message: 'Select what you are training for',
+  }),
+  details: z.string().min(10, 'Tell me a little about your goal'),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -40,16 +44,16 @@ export function BookingForm() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { tier: 'undecided' },
+    defaultValues: { goal: '' },
   })
 
-  const selectedTier = watch('tier')
+  const selectedGoal = watch('goal')
 
   // Fire booking_started once, when the athlete begins filling the form.
   const handleStart = () => {
     if (!startedTracked) {
       setStartedTracked(true)
-      track('booking_started', { tier: selectedTier })
+      track('booking_started', { goal: selectedGoal })
     }
   }
 
@@ -63,10 +67,10 @@ export function BookingForm() {
       })
       if (!res.ok) throw new Error('Request failed')
 
-      // NOTE: Stripe checkout / Cal.com scheduling would wire in here — e.g.
-      // redirect to a Stripe Checkout session or open a Cal.com embed seeded
-      // with `values.tier`. For now we confirm the request and follow up manually.
-      track('booking_completed', { tier: values.tier })
+      // NOTE: Cal.com scheduling would wire in here — e.g. open a Cal.com embed
+      // seeded with `values.goal`. For now we confirm the request and follow up
+      // manually.
+      track('booking_completed', { goal: values.goal })
       setSubmitted(true)
     } catch {
       setError('We could not submit your request. Please try again.')
@@ -132,33 +136,36 @@ export function BookingForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="tier">Preferred tier</Label>
+        <Label htmlFor="goal">What are you training for?</Label>
         <select
-          id="tier"
+          id="goal"
           className={cn(
             'flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
-          {...register('tier')}
+          {...register('goal')}
         >
-          {TIERS.map((t) => (
-            <option key={t.value} value={t.value} className="bg-sumi text-washi">
-              {t.label}
+          <option value="" disabled className="bg-sumi text-koke">
+            Select your primary goal…
+          </option>
+          {GOALS.map((g) => (
+            <option key={g.value} value={g.value} className="bg-sumi text-washi">
+              {g.label}
             </option>
           ))}
         </select>
-        {errors.tier && <p className="text-sm text-aka">{errors.tier.message}</p>}
+        {errors.goal && <p className="text-sm text-aka">{errors.goal.message}</p>}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="goals">What are you training for?</Label>
+        <Label htmlFor="details">Tell me more about your goal</Label>
         <Textarea
-          id="goals"
+          id="details"
           rows={5}
-          placeholder="Your goals, history, injuries, timeline — anything that helps us prepare."
-          {...register('goals')}
+          placeholder="Your target event or milestone, timeline, training history, injuries — anything that helps me program you properly."
+          {...register('details')}
         />
-        {errors.goals && (
-          <p className="text-sm text-aka">{errors.goals.message}</p>
+        {errors.details && (
+          <p className="text-sm text-aka">{errors.details.message}</p>
         )}
       </div>
 
