@@ -53,6 +53,10 @@ export function BookingCTA() {
             <Link href="/login">Start free — connect your data</Link>
           </Button>
         </div>
+        <p className="mt-6 text-sm text-washi/60">
+          Free · ~20 minutes · no pressure — usually a reply within one business
+          day.
+        </p>
       </div>
     </section>
   )

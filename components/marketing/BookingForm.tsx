@@ -167,6 +167,10 @@ export function BookingForm() {
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? 'Submitting…' : 'Request My Discovery Call'}
       </Button>
+      <p className="text-center text-xs text-muted-foreground">
+        Free · no pressure · we reply within one business day. Not sure yet?
+        It&apos;s just a conversation.
+      </p>
     </form>
   )
 }
