@@ -15,7 +15,7 @@ const ONBOARDING = [
     num: '01',
     title: 'Discovery call',
     description:
-      'A real conversation about your goals, history, and timeline. We tell you honestly whether we are the right fit — no pressure, no pitch.',
+      'A direct conversation about your goals, history, and timeline — and a straight answer on whether we are the right fit to take you further.',
   },
   {
     num: '02',

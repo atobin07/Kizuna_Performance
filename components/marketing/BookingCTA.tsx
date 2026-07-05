@@ -33,9 +33,9 @@ export function BookingCTA() {
           <span className="text-gold-gradient">in twenty years.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          One honest conversation. I&apos;ll learn where you are, show you what
-          your data can do, and tell you straight whether we&apos;re the right
-          fit — no pressure, no pitch.
+          One direct conversation. I&apos;ll learn where you are, show you what
+          your data can do, and tell you straight what your next level looks
+          like — and whether we&apos;re the right fit to get you there.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
@@ -54,8 +54,7 @@ export function BookingCTA() {
           </Button>
         </div>
         <p className="mt-6 text-sm text-washi/60">
-          Free · ~20 minutes · no pressure — usually a reply within one business
-          day.
+          For athletes ready to commit to their next level.
         </p>
       </div>
     </section>

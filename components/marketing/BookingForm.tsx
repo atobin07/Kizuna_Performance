@@ -168,8 +168,7 @@ export function BookingForm() {
         {isSubmitting ? 'Submitting…' : 'Request My Discovery Call'}
       </Button>
       <p className="text-center text-xs text-muted-foreground">
-        Free · no pressure · we reply within one business day. Not sure yet?
-        It&apos;s just a conversation.
+        Every request is reviewed personally. We reply within one business day.
       </p>
     </form>
   )

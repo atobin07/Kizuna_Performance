@@ -5,32 +5,32 @@ import { BookingForm } from '@/components/marketing/BookingForm'
 export const metadata: Metadata = {
   title: 'Book a Discovery Call',
   description:
-    'Book your free Kizuna Performance discovery call. Twenty minutes to map your goals and whether we are the right fit — no pressure, no pitch.',
+    'Book your Kizuna Performance discovery call — a direct conversation for athletes ready to reach their next level, and whether we are the right fit to get you there.',
 }
 
 const STEPS = [
   {
     icon: ClipboardList,
-    title: 'Tell us your goal',
-    body: 'Fill out the short form. The more we know going in, the more useful your call will be.',
+    title: 'Share your goal',
+    body: 'Tell us what you are chasing and where you stand now. The sharper the detail, the sharper the call.',
   },
   {
     icon: PhoneCall,
-    title: 'We talk it through',
-    body: 'A free, ~20-minute call. Your goals, your history, your timeline — and honest answers on how we would approach it.',
+    title: 'We map your next level',
+    body: 'A direct conversation about your goals, your gaps, and exactly how we would close them.',
   },
   {
     icon: Compass,
-    title: 'You leave with a direction',
-    body: 'A clear read on where you stand and the first move to make — whether or not you end up training with us.',
+    title: 'You leave with a plan',
+    body: 'A clear read on your ceiling and the first move to make — and whether we are the right fit for each other.',
   },
 ]
 
 const WALKAWAY = [
-  'An honest assessment of where your training stands',
-  'The single biggest lever for your specific goal',
-  'How data-driven, whole-health coaching would work for you',
-  'Zero pressure — if we are not the right fit, we will tell you',
+  'A clear read on the ceiling you are actually capable of',
+  'The single biggest lever between you and your next level',
+  'Exactly how data-driven, whole-health coaching gets you there',
+  'A straight answer on fit — we only take athletes we can move',
 ]
 
 export default function BookPage() {
@@ -40,18 +40,17 @@ export default function BookPage() {
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <span className="kanji text-3xl text-kin">絆</span>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-washi sm:text-5xl">
-            Book your discovery call
+            Take it to the next level
           </h1>
           <p className="mt-5 text-lg text-muted-foreground">
-            A free, 20-minute call. We will map where you are, where you want to
-            go, and whether Kizuna is the right fit — no pressure, no pitch.
+            A direct conversation for athletes ready to raise their ceiling. We
+            map where you are, where you are going, and whether we are the right
+            fit to get you there.
           </p>
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-border bg-card px-5 py-2 text-xs font-medium uppercase tracking-widest text-kin">
-            <span>Free</span>
+            <span>Selective coaching</span>
             <span className="text-koke">·</span>
-            <span>~20 minutes</span>
-            <span className="text-koke">·</span>
-            <span>Reply within 1 business day</span>
+            <span>A limited number of athletes at a time</span>
           </div>
         </div>
 
