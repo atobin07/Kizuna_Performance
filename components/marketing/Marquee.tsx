@@ -1,9 +1,10 @@
 const PHRASES = [
-  'Movement Architecture',
-  'Sustainable Load',
+  'Marathons',
+  'Lifting Competitions',
+  'Adventure Races',
+  'Longevity Fitness',
   'Recovery as Training',
-  'Performance Longevity',
-  'Precision meets grit',
+  'Virginia Beach',
 ]
 
 export function Marquee() {

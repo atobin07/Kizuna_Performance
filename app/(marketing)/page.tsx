@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/marketing/Hero'
 import { Methodology } from '@/components/marketing/Methodology'
+import { Disciplines } from '@/components/marketing/Disciplines'
 import { StatsBand } from '@/components/marketing/StatsBand'
 import { Marquee } from '@/components/marketing/Marquee'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
@@ -12,7 +13,7 @@ import { IntegrationsShowcase } from '@/components/marketing/IntegrationsShowcas
 export const metadata: Metadata = {
   title: 'Elite movement. Built to last.',
   description:
-    'Kizuna Performance — a coaching bond that goes beyond the gym. Recovery-first training, holistic health, and your data working for you. Built to last.',
+    'Kizuna Performance — data-driven coaching in Virginia Beach for marathons, lifting competitions, adventure races and longevity fitness. Recovery-first, whole-health, built to last.',
 }
 
 export default function HomePage() {
@@ -25,6 +26,7 @@ export default function HomePage() {
       <IntegrationsShowcase />
 
       <Methodology />
+      <Disciplines />
       <StatsBand />
 
       {/* Interactive hook — the lead magnet */}

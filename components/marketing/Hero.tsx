@@ -77,10 +77,11 @@ export function Hero() {
             variants={item}
             className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Kizuna (絆) is the bond. I don&apos;t just write your program — I
-            stay in your corner every day, in and out of the gym. Expert
-            coaching, recovery-first, invested in your whole health for the
-            long haul.
+            Kizuna (絆) is the bond. From my gym in Virginia Beach, I don&apos;t
+            just write your program — I stay in your corner every day, in and
+            out of the gym. Marathons, the platform, adventure races or just
+            training for a long, strong life — recovery-first and invested in
+            your whole health.
           </motion.p>
 
           <motion.div variants={item} className="mt-11 flex flex-col gap-4 sm:flex-row">

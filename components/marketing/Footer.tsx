@@ -67,7 +67,7 @@ export function Footer() {
         <div className="mt-12 flex flex-col gap-2 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 Kizuna Performance</p>
           <p className="tracked-caps text-xs text-koke">
-            絆 · Elite movement. Built to last.
+            絆 · Virginia Beach, VA
           </p>
         </div>
       </div>
