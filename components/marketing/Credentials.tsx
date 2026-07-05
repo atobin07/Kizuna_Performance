@@ -22,9 +22,15 @@ const GROUPS = [
 // Methodologies we independently study and apply. Framed as influences only —
 // no affiliation, endorsement, or partnership is claimed (see disclaimer).
 const INFLUENCES = [
+  { name: 'Dr. Peter Attia', method: 'longevity · Zone 2' },
+  { name: 'Dr. Andy Galpin', method: 'performance physiology' },
   { name: 'Kelly Starrett', method: 'Supple Leopard · mobility' },
-  { name: 'The Oxygen Advantage', method: 'functional breathing' },
+  { name: 'Dr. Andreo Spina', method: 'Functional Range Conditioning' },
+  { name: 'Christopher Sommer', method: 'GymnasticBodies · gymnastics' },
   { name: 'Burgener Strength', method: 'Olympic lifting' },
+  { name: 'Phil Maffetone', method: 'aerobic (MAF) training' },
+  { name: 'The Oxygen Advantage', method: 'functional breathing' },
+  { name: 'Dr. Matthew Walker', method: 'sleep science' },
 ]
 
 export function Credentials() {
