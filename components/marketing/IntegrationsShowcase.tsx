@@ -2,7 +2,14 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Moon, Activity, ShieldCheck, ArrowRight } from 'lucide-react'
+import {
+  Moon,
+  Activity,
+  ShieldCheck,
+  ArrowRight,
+  Dumbbell,
+  Utensils,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PROVIDERS } from '@/lib/integrations'
 
@@ -19,6 +26,23 @@ const CHIPS = [
   ...EXTRA,
 ]
 
+// How the data actually gets used — the two things it buys you.
+const PILLARS = [
+  {
+    icon: Dumbbell,
+    title: 'Training built around your body',
+    blurb:
+      'We leverage the tools you already wear to customize your training — your program is shaped by your real recovery, strain and readiness, never a generic template.',
+  },
+  {
+    icon: Utensils,
+    title: 'Expert feedback beyond the gym',
+    blurb:
+      'I read your data myself and give you expert guidance on sleep, nutrition and supplements. That whole-health coaching is what takes your training to a different level.',
+  },
+]
+
+// The numbers I watch for you day to day.
 const METRICS = [
   {
     icon: Moon,
@@ -75,20 +99,21 @@ export function IntegrationsShowcase() {
           className="mx-auto max-w-2xl text-center"
         >
           <p className="mb-4 text-xs font-medium uppercase tracking-widest text-kin">
-            How the coaching works
+            A trainer who values the bond
           </p>
           <h2 className="font-display text-4xl font-bold tracking-tight text-washi sm:text-5xl md:text-6xl">
-            We deliver coaching{' '}
-            <span className="text-gold-gradient">through your data.</span>
+            I connect with my athletes{' '}
+            <span className="text-gold-gradient">through their data.</span>
           </h2>
           <p className="mt-6 text-lg text-muted-foreground">
-            Connect the devices you already wear and Kizuna becomes a service
-            that runs every day — not just on session days. Your sleep, recovery
-            and strain flow straight to your coach, so every program, macro
-            target and check-in is built from what your body is actually doing.
+            The bond is what I care about most. Your data is how I keep it — it
+            tells me where you are and what you need before you ever walk in, so
+            every minute we spend together goes to exactly the right work. And it
+            lets me coach your whole health — sleep, recovery, stress and
+            nutrition — not just your hours in the gym.
           </p>
           <p className="mt-4 text-xs uppercase tracking-widest text-koke">
-            The coaching &amp; the bond are the product · the data is how it&apos;s delivered
+            A comprehensive approach to health · not just gym time
           </p>
         </motion.div>
 
@@ -98,9 +123,9 @@ export function IntegrationsShowcase() {
           <ChipRow reverse />
         </div>
 
-        {/* Flow → scores */}
+        {/* Flow → coaching */}
         <div className="mx-auto mt-14 flex max-w-3xl items-center justify-center gap-4 text-muted-foreground">
-          <span className="text-sm uppercase tracking-widest">Your devices</span>
+          <span className="text-sm uppercase tracking-widest">Tools you use</span>
           <ArrowRight className="h-4 w-4 text-kin" />
           <span className="kanji text-2xl text-kin">絆</span>
           <ArrowRight className="h-4 w-4 text-kin" />
@@ -109,7 +134,54 @@ export function IntegrationsShowcase() {
           </span>
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        {/* Part 2 — how the data is used */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mt-20 max-w-2xl text-center"
+        >
+          <p className="mb-4 text-xs font-medium uppercase tracking-widest text-kin">
+            How I use your data
+          </p>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-washi sm:text-4xl md:text-5xl">
+            Two ways it changes{' '}
+            <span className="text-gold-gradient">your training.</span>
+          </h2>
+        </motion.div>
+
+        <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-2">
+          {PILLARS.map((p, i) => {
+            const Icon = p.icon
+            return (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-2xl border border-border bg-sumi p-8 transition-colors hover:border-kin/40"
+              >
+                <span className="inline-flex rounded-lg border border-kin/30 bg-kin/10 p-3 text-kin">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 font-display text-2xl font-bold text-washi">
+                  {p.title}
+                </h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">
+                  {p.blurb}
+                </p>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        {/* Supporting: the computed scores */}
+        <p className="mt-16 text-center text-xs uppercase tracking-widest text-koke">
+          The numbers I watch for you
+        </p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
           {METRICS.map((m, i) => {
             const Icon = m.icon
             return (
