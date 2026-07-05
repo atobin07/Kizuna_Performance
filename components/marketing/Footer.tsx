@@ -19,8 +19,8 @@ export function Footer() {
               <Logo size={40} />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Elite movement. Built to last. Precision coaching rooted in the
-              discipline of a craft.
+              The bond between coach and athlete. Recovery-first coaching that
+              lives in your data — every day, not just on session days.
             </p>
           </div>
 
@@ -66,7 +66,9 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-2 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 Kizuna Performance</p>
-          <p className="tracked-caps text-xs">Texas, USA</p>
+          <p className="tracked-caps text-xs text-koke">
+            絆 · Elite movement. Built to last.
+          </p>
         </div>
       </div>
     </footer>
