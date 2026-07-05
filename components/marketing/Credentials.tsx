@@ -19,6 +19,14 @@ const GROUPS = [
   },
 ]
 
+// Methodologies we independently study and apply. Framed as influences only —
+// no affiliation, endorsement, or partnership is claimed (see disclaimer).
+const INFLUENCES = [
+  { name: 'Kelly Starrett', method: 'Supple Leopard · mobility' },
+  { name: 'The Oxygen Advantage', method: 'functional breathing' },
+  { name: 'Burgener Strength', method: 'Olympic lifting' },
+]
+
 export function Credentials() {
   return (
     <section className="grain relative overflow-hidden bg-sumi py-24 md:py-32">
@@ -71,6 +79,42 @@ export function Credentials() {
             </motion.div>
           ))}
         </div>
+
+        {/* Students of the field — influences we study, not affiliations */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto mt-16 max-w-4xl text-center"
+        >
+          <p className="tracked-caps mb-3 text-xs font-medium text-kin">
+            Students of the field
+          </p>
+          <p className="mx-auto max-w-2xl text-muted-foreground">
+            We never stop learning. Our approach also draws on the published
+            methods of coaches and programs we study and apply, including:
+          </p>
+
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            {INFLUENCES.map((inf) => (
+              <span
+                key={inf.name}
+                className="rounded-full border border-border bg-card px-4 py-2.5 text-sm"
+              >
+                <span className="font-medium text-washi">{inf.name}</span>
+                <span className="text-koke"> — {inf.method}</span>
+              </span>
+            ))}
+          </div>
+
+          <p className="mx-auto mt-8 max-w-2xl text-xs leading-relaxed text-koke">
+            We independently study and apply these published methods. Kizuna
+            Performance is not affiliated with, sponsored by, certified by, or
+            endorsed by these coaches, authors, or organizations. All names and
+            programs are the property of their respective owners.
+          </p>
+        </motion.div>
       </div>
     </section>
   )
