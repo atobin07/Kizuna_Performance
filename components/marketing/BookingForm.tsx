@@ -13,8 +13,8 @@ import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics'
 
 const TIERS = [
-  { value: 'private', label: '1-on-1 Private ($750–$1,000/mo)' },
-  { value: 'semi-private', label: 'Semi-Private Group ($500–$600/mo)' },
+  { value: 'private', label: '1-on-1 Private' },
+  { value: 'semi-private', label: 'Semi-Private Group' },
   { value: 'undecided', label: 'Not sure yet' },
 ] as const
 
