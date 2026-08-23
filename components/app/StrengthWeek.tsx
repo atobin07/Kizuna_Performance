@@ -5,7 +5,7 @@ import { StrengthDay } from '@/components/app/StrengthDay'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Check, Lock, Moon } from 'lucide-react'
-import type { ResolvedExercise, DayKey } from '@/lib/strength'
+import type { ResolvedExercise, DayKey, MainLift } from '@/lib/strength'
 import type { StrengthEntry } from '@/lib/supabase/types'
 
 export interface WeekDay {
@@ -27,6 +27,7 @@ export interface StrengthWeekProps {
   days: WeekDay[]
   initialDayKey: DayKey
   activeWeek: number
+  increments: Record<MainLift, number>
 }
 
 function plannedLabel(ex: ResolvedExercise): string {
@@ -98,6 +99,7 @@ export function StrengthWeek({
   days,
   initialDayKey,
   activeWeek,
+  increments,
 }: StrengthWeekProps) {
   const [selectedKey, setSelectedKey] = React.useState<DayKey>(initialDayKey)
   const day = days.find((d) => d.dayKey === selectedKey) ?? days[0]
@@ -158,6 +160,7 @@ export function StrengthWeek({
               logWeek={activeWeek}
               dayKey={day.dayKey}
               exercises={day.exercises}
+              increments={increments}
               initialEntries={day.entries}
               initialNotes={day.notes}
             />

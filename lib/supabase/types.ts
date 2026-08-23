@@ -241,6 +241,7 @@ export type StrengthConfig = {
   client_id: string
   start_date: string
   base_weights: Json
+  increments: Json
   updated_at: string
 }
 

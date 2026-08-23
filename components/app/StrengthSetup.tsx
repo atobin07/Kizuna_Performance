@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import {
   INCREMENTS,
+  INCREMENT_OPTIONS,
   MAIN_LIFT_LABELS,
   DEFAULT_BASE_WEIGHTS,
   type MainLift,
@@ -19,11 +21,17 @@ export interface StrengthSetupProps {
   clientId: string
   startDate: string
   baseWeights: Record<MainLift, number>
+  increments: Record<MainLift, number>
 }
 
 const LIFTS = Object.keys(INCREMENTS) as MainLift[]
 
-export function StrengthSetup({ clientId, startDate, baseWeights }: StrengthSetupProps) {
+export function StrengthSetup({
+  clientId,
+  startDate,
+  baseWeights,
+  increments,
+}: StrengthSetupProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [saving, setSaving] = React.useState(false)
@@ -35,15 +43,24 @@ export function StrengthSetup({ clientId, startDate, baseWeights }: StrengthSetu
     }
     return init
   })
+  const [incs, setIncs] = React.useState<Record<MainLift, number>>(() => {
+    const init = {} as Record<MainLift, number>
+    for (const lift of LIFTS) {
+      init[lift] = increments[lift] ?? INCREMENTS[lift]
+    }
+    return init
+  })
 
   async function save() {
     setSaving(true)
     const supabase = createClient()
 
     const base_weights: Record<string, number> = {}
+    const increments_out: Record<string, number> = {}
     for (const lift of LIFTS) {
       const n = Number(weights[lift])
       base_weights[lift] = Number.isNaN(n) ? DEFAULT_BASE_WEIGHTS[lift] : n
+      increments_out[lift] = incs[lift] ?? INCREMENTS[lift]
     }
 
     const { error } = await supabase.from('strength_config').upsert(
@@ -51,6 +68,7 @@ export function StrengthSetup({ clientId, startDate, baseWeights }: StrengthSetu
         client_id: clientId,
         start_date: start,
         base_weights,
+        increments: increments_out,
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'client_id' }
@@ -91,28 +109,57 @@ export function StrengthSetup({ clientId, startDate, baseWeights }: StrengthSetu
       </div>
 
       <div>
-        <Label className="mb-2 block">Starting weights (lb)</Label>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <Label className="mb-2 block">Starting weight &amp; weekly add per lift</Label>
+        <div className="space-y-3">
           {LIFTS.map((lift) => (
-            <div key={lift} className="flex items-center justify-between gap-3 rounded-md border border-border bg-card px-3 py-2">
-              <div>
-                <p className="text-sm font-medium text-washi">
-                  {MAIN_LIFT_LABELS[lift]}
-                </p>
-                <p className="text-[0.65rem] uppercase tracking-wider text-kin">
-                  +{INCREMENTS[lift]} lb / week
-                </p>
+            <div
+              key={lift}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card px-3 py-2.5"
+            >
+              <p className="text-sm font-medium text-washi">
+                {MAIN_LIFT_LABELS[lift]}
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                    Start
+                  </span>
+                  <Input
+                    type="number"
+                    inputMode="decimal"
+                    step="2.5"
+                    value={weights[lift]}
+                    onChange={(e) =>
+                      setWeights((w) => ({ ...w, [lift]: e.target.value }))
+                    }
+                    className="h-9 w-20"
+                  />
+                  <span className="text-xs text-muted-foreground">lb</span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                    +/wk
+                  </span>
+                  <div className="flex overflow-hidden rounded-md border border-input">
+                    {INCREMENT_OPTIONS.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setIncs((s) => ({ ...s, [lift]: opt }))}
+                        className={cn(
+                          'px-2.5 py-1.5 text-xs font-semibold transition-colors',
+                          incs[lift] === opt
+                            ? 'bg-kin text-sumi'
+                            : 'text-muted-foreground hover:text-washi'
+                        )}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="2.5"
-                value={weights[lift]}
-                onChange={(e) =>
-                  setWeights((w) => ({ ...w, [lift]: e.target.value }))
-                }
-                className="h-9 w-24"
-              />
             </div>
           ))}
         </div>

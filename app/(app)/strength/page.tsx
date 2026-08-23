@@ -19,6 +19,7 @@ import {
   weeksElapsed,
   resolveDay,
   parseBaseWeights,
+  parseIncrements,
   liftTargetForDate,
   INCREMENTS,
   MAIN_LIFT_LABELS,
@@ -71,6 +72,7 @@ export default async function StrengthPage({
 
   const startDate = config?.start_date ?? today
   const baseWeights = parseBaseWeights(config?.base_weights)
+  const increments = parseIncrements(config?.increments)
 
   // Deload events (per-lift failures) shape all target computation below.
   const { data: deloadRows } = await supabase
@@ -137,7 +139,7 @@ export default async function StrengthPage({
       dateISO,
       isToday: dateISO === today,
       isPast: dateISO < today,
-      exercises: resolveDay(d, baseWeights, startDate, dateISO, deloads),
+      exercises: resolveDay(d, baseWeights, startDate, dateISO, deloads, increments),
       entries: entriesByDate[dateISO] ?? {},
       notes: notesByDate[dateISO] ?? '',
     }
@@ -228,10 +230,10 @@ export default async function StrengthPage({
                 {MAIN_LIFT_LABELS[lift]}
               </p>
               <p className="mt-1 font-mono text-xl font-bold text-washi">
-                {liftTargetForDate(lift, baseWeights, startDate, weekStartISO, deloads)}
+                {liftTargetForDate(lift, baseWeights, startDate, weekStartISO, deloads, increments)}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">lb</span>
               </p>
-              <p className="text-[0.65rem] text-kin">+{INCREMENTS[lift]}/wk</p>
+              <p className="text-[0.65rem] text-kin">+{increments[lift]}/wk</p>
             </CardContent>
           </Card>
         ))}
@@ -243,6 +245,7 @@ export default async function StrengthPage({
         days={days}
         initialDayKey={initialDayKey}
         activeWeek={activeWeek}
+        increments={increments}
       />
 
       {/* Progression charts */}
@@ -279,6 +282,7 @@ export default async function StrengthPage({
             clientId={user.id}
             startDate={startDate}
             baseWeights={baseWeights}
+            increments={increments}
           />
         </CardContent>
       </Card>

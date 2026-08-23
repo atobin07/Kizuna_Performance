@@ -19,14 +19,17 @@ export type MainLift = 'squat' | 'deadlift' | 'ohp' | 'bench' | 'hang_clean'
 export type Category = 'main' | 'bodyweight' | 'accessory' | 'abs'
 export type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 
-/** Weekly weight added to each progressed lift (lb). */
+/** Default weekly weight added to each progressed lift (lb) — user-overridable. */
 export const INCREMENTS: Record<MainLift, number> = {
-  squat: 5,
+  squat: 10,
   deadlift: 10,
   ohp: 2.5,
   bench: 2.5,
   hang_clean: 2.5,
 }
+
+/** Allowed weekly increments the athlete can pick per lift. */
+export const INCREMENT_OPTIONS = [2.5, 5, 10] as const
 
 export const MAIN_LIFT_LABELS: Record<MainLift, string> = {
   squat: 'Squat',
@@ -190,10 +193,17 @@ export function roundLoad(n: number): number {
   return Math.round(n * 2) / 2
 }
 
-/** The 20%-reduced baseline used when a lift is failed. */
-export function deloadBaseline(currentTarget: number): number {
-  // Reduce 20%, snap to the nearest 2.5 lb so it's actually loadable.
-  return Math.round((currentTarget * 0.8) / 2.5) * 2.5
+/**
+ * The 20%-reduced baseline used when a lift is failed. Snaps to the lift's own
+ * weekly step so it stays on that lift's loading grid.
+ */
+export function deloadBaseline(
+  currentTarget: number,
+  lift: MainLift,
+  increments: Record<MainLift, number> = INCREMENTS
+): number {
+  const step = increments[lift] || INCREMENTS[lift]
+  return Math.round((currentTarget * 0.8) / step) * step
 }
 
 /**
@@ -207,9 +217,11 @@ export function liftTargetForDate(
   baseWeights: Partial<Record<MainLift, number>>,
   startISO: string,
   dateISO: string,
-  deloads: DeloadEvent[]
+  deloads: DeloadEvent[],
+  increments: Record<MainLift, number> = INCREMENTS
 ): number {
   const w = weeksElapsed(startISO, dateISO)
+  const step = increments[lift] || INCREMENTS[lift]
   let seg = {
     date: startISO,
     week: 0,
@@ -222,7 +234,7 @@ export function liftTargetForDate(
       seg = { date: d.effective_date, week: d.baseline_week, baseline: d.new_baseline }
     }
   }
-  return roundLoad(seg.baseline + INCREMENTS[lift] * Math.max(0, w - seg.week))
+  return roundLoad(seg.baseline + step * Math.max(0, w - seg.week))
 }
 
 /** Resolve a day's exercises with deload-aware target weights. */
@@ -231,13 +243,21 @@ export function resolveDay(
   baseWeights: Partial<Record<MainLift, number>>,
   startISO: string,
   dateISO: string,
-  deloads: DeloadEvent[]
+  deloads: DeloadEvent[],
+  increments: Record<MainLift, number> = INCREMENTS
 ): ResolvedExercise[] {
   return day.exercises.map((ex) => {
     if (ex.lift) {
       return {
         ...ex,
-        target: liftTargetForDate(ex.lift, baseWeights, startISO, dateISO, deloads),
+        target: liftTargetForDate(
+          ex.lift,
+          baseWeights,
+          startISO,
+          dateISO,
+          deloads,
+          increments
+        ),
       }
     }
     return { ...ex, target: null }
@@ -253,6 +273,18 @@ export function parseBaseWeights(
     for (const lift of Object.keys(INCREMENTS) as MainLift[]) {
       const v = (json as Record<string, unknown>)[lift]
       if (typeof v === 'number' && !Number.isNaN(v)) out[lift] = v
+    }
+  }
+  return out
+}
+
+/** Coerce a stored increments json blob into a typed record (falls back to defaults). */
+export function parseIncrements(json: unknown): Record<MainLift, number> {
+  const out = { ...INCREMENTS }
+  if (json && typeof json === 'object') {
+    for (const lift of Object.keys(INCREMENTS) as MainLift[]) {
+      const v = (json as Record<string, unknown>)[lift]
+      if (typeof v === 'number' && v > 0) out[lift] = v
     }
   }
   return out

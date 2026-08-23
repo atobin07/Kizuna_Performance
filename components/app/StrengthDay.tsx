@@ -17,6 +17,7 @@ import {
   type ResolvedExercise,
   type Category,
   type DayKey,
+  type MainLift,
 } from '@/lib/strength'
 import type { StrengthEntry } from '@/lib/supabase/types'
 
@@ -33,6 +34,7 @@ export interface StrengthDayProps {
   logWeek: number
   dayKey: DayKey
   exercises: ResolvedExercise[]
+  increments: Record<MainLift, number>
   initialEntries: Record<string, StrengthEntry>
   initialNotes: string
 }
@@ -56,6 +58,7 @@ export function StrengthDay({
   logWeek,
   dayKey,
   exercises,
+  increments,
   initialEntries,
   initialNotes,
 }: StrengthDayProps) {
@@ -67,7 +70,7 @@ export function StrengthDay({
 
   async function handleFail(ex: ResolvedExercise) {
     if (!ex.lift || ex.target == null) return
-    const newBaseline = deloadBaseline(ex.target)
+    const newBaseline = deloadBaseline(ex.target, ex.lift, increments)
     const label = MAIN_LIFT_LABELS[ex.lift]
     const ok = window.confirm(
       `Fail ${label} at ${ex.target} lb?\n\nIt will drop 20% to ${newBaseline} lb, and progression resumes from there for every future session. Today stays as logged.`
