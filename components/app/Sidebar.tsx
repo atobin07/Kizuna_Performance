@@ -8,6 +8,7 @@ import { SignOutButton } from '@/components/app/SignOutButton'
 import {
   LayoutDashboard,
   Dumbbell,
+  TrendingUp,
   BarChart3,
   BookOpen,
   MessageSquare,
@@ -29,6 +30,7 @@ export interface SidebarNavItem {
 const ICONS = {
   dashboard: LayoutDashboard,
   program: Dumbbell,
+  strength: TrendingUp,
   benchmarks: BarChart3,
   journal: BookOpen,
   food: UtensilsCrossed,

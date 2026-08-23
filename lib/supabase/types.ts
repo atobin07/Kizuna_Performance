@@ -237,9 +237,45 @@ type TableDef<T> = {
   Relationships: []
 }
 
+export type StrengthConfig = {
+  client_id: string
+  start_date: string
+  base_weights: Json
+  updated_at: string
+}
+
+export type StrengthSession = {
+  id: string
+  client_id: string | null
+  log_date: string
+  day_key: string | null
+  notes: string | null
+  updated_at: string
+}
+
+export type StrengthEntry = {
+  id: string
+  client_id: string | null
+  log_date: string
+  exercise_key: string
+  exercise_name: string | null
+  category: string | null
+  target_weight: number | null
+  target_sets: number | null
+  target_reps: string | null
+  actual_weight: number | null
+  actual_sets: number | null
+  actual_reps: string | null
+  completed: boolean
+  updated_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
+      strength_config: TableDef<StrengthConfig>
+      strength_sessions: TableDef<StrengthSession>
+      strength_entries: TableDef<StrengthEntry>
       profiles: TableDef<Profile>
       programs: TableDef<Program>
       workouts: TableDef<Workout>
