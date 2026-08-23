@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -12,11 +12,24 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   ),
+  applicationName: 'Kizuna Performance',
+  appleWebApp: {
+    capable: true,
+    title: 'Kizuna',
+    statusBarStyle: 'black-translucent',
+  },
   openGraph: {
     title: 'Kizuna Performance',
     description: 'Elite movement. Built to last.',
     type: 'website',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#0B0B0C',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
