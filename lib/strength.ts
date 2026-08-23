@@ -24,7 +24,7 @@ export const INCREMENTS: Record<MainLift, number> = {
   squat: 10,
   deadlift: 10,
   ohp: 2.5,
-  bench: 2.5,
+  bench: 5,
   hang_clean: 2.5,
 }
 
