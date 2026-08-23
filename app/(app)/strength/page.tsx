@@ -1,6 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { todayISO, lastNDays } from '@/lib/dates'
+import {
+  todayISO,
+  lastNDays,
+  startOfISOWeek,
+  addDays,
+  toISODate,
+} from '@/lib/dates'
 import { historyWindowDays, type Plan } from '@/lib/plan'
 import {
   WEEKLY_PLAN,
@@ -14,12 +20,11 @@ import {
   MAIN_LIFT_LABELS,
   type MainLift,
 } from '@/lib/strength'
-import { StrengthDay } from '@/components/app/StrengthDay'
+import { StrengthWeek, type WeekDay } from '@/components/app/StrengthWeek'
 import { StrengthSetup } from '@/components/app/StrengthSetup'
 import { BenchmarkChart } from '@/components/app/BenchmarkChart'
 import { UpgradeCard } from '@/components/app/UpgradeCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Moon } from 'lucide-react'
 import type {
   StrengthConfig,
   StrengthEntry,
@@ -57,27 +62,54 @@ export default async function StrengthPage() {
   const baseWeights = parseBaseWeights(config?.base_weights)
   const weeks = weeksElapsed(startDate, today)
 
-  const dayKey = dayKeyForDate(new Date())
-  const day = WEEKLY_PLAN[dayKey]
-  const resolved = resolveDay(day, baseWeights, weeks)
+  // Current Monday-based week: one date per split day.
+  const weekStart = startOfISOWeek(new Date())
+  const weekDates = DAY_ORDER.map((_, i) => toISODate(addDays(weekStart, i)))
+  const weekStartISO = weekDates[0]
+  const weekEndISO = weekDates[weekDates.length - 1]
 
-  // Today's saved data.
-  const { data: entryRows } = await supabase
+  // All entries + sessions for this week, grouped by date.
+  const { data: weekEntryRows } = await supabase
     .from('strength_entries')
     .select('*')
     .eq('client_id', user.id)
-    .eq('log_date', today)
-  const todaysEntries = (entryRows ?? []) as StrengthEntry[]
-  const entryMap: Record<string, StrengthEntry> = {}
-  for (const e of todaysEntries) entryMap[e.exercise_key] = e
+    .gte('log_date', weekStartISO)
+    .lte('log_date', weekEndISO)
+  const entriesByDate: Record<string, Record<string, StrengthEntry>> = {}
+  for (const e of (weekEntryRows ?? []) as StrengthEntry[]) {
+    ;(entriesByDate[e.log_date] ??= {})[e.exercise_key] = e
+  }
 
-  const { data: sessionData } = await supabase
+  const { data: weekSessionRows } = await supabase
     .from('strength_sessions')
     .select('*')
     .eq('client_id', user.id)
-    .eq('log_date', today)
-    .maybeSingle()
-  const session = sessionData as StrengthSession | null
+    .gte('log_date', weekStartISO)
+    .lte('log_date', weekEndISO)
+  const notesByDate: Record<string, string> = {}
+  for (const s of (weekSessionRows ?? []) as StrengthSession[]) {
+    notesByDate[s.log_date] = s.notes ?? ''
+  }
+
+  const days: WeekDay[] = DAY_ORDER.map((k, i) => {
+    const d = WEEKLY_PLAN[k]
+    const dateISO = weekDates[i]
+    return {
+      dayKey: k,
+      label: d.label,
+      shortLabel: d.label.slice(0, 3),
+      title: d.title,
+      rest: Boolean(d.rest),
+      dateISO,
+      isToday: dateISO === today,
+      isPast: dateISO < today,
+      exercises: resolveDay(d, baseWeights, weeks),
+      entries: entriesByDate[dateISO] ?? {},
+      notes: notesByDate[dateISO] ?? '',
+    }
+  })
+
+  const initialDayKey = dayKeyForDate(new Date())
 
   // History for the progression charts (main lifts, actual weight over time).
   const window = historyWindowDays(plan)
@@ -103,15 +135,16 @@ export default async function StrengthPage() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">
-            Strength · Week {weeks + 1}
-          </p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-washi">
-            {day.label} — {day.title}
-          </h1>
-        </div>
+      <header>
+        <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          Strength · Week {weeks + 1}
+        </p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-washi">
+          Weekly progression
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Toggle any day to preview it. Logging opens on the active day.
+        </p>
       </header>
 
       {/* This week's main-lift targets */}
@@ -132,71 +165,8 @@ export default async function StrengthPage() {
         ))}
       </div>
 
-      {/* Today */}
-      {day.rest ? (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
-            <span className="inline-flex rounded-full border border-kin/30 bg-kin/10 p-3 text-kin">
-              <Moon className="h-6 w-6" />
-            </span>
-            <h2 className="font-display text-2xl font-bold text-washi">Rest day</h2>
-            <p className="max-w-md text-sm text-muted-foreground">
-              Recovery is training. Prioritize sleep, easy movement and food —
-              you grow today so you can hit next week&apos;s numbers.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base uppercase tracking-wider">
-              Today&apos;s checklist
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <StrengthDay
-              clientId={user.id}
-              logDate={today}
-              dayKey={dayKey}
-              exercises={resolved}
-              initialEntries={entryMap}
-              initialNotes={session?.notes ?? ''}
-            />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* The week at a glance */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base uppercase tracking-wider">
-            Weekly split
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {DAY_ORDER.map((k) => {
-              const d = WEEKLY_PLAN[k]
-              const isToday = k === dayKey
-              return (
-                <div
-                  key={k}
-                  className={
-                    'rounded-lg border p-3 ' +
-                    (isToday ? 'border-kin bg-kin/[0.06]' : 'border-border bg-card')
-                  }
-                >
-                  <p className="text-[0.65rem] uppercase tracking-wider text-kin">
-                    {d.label}
-                    {isToday ? ' · Today' : ''}
-                  </p>
-                  <p className="mt-1 text-sm text-washi">{d.title}</p>
-                </div>
-              )
-            })}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Week toggle + day (editable only when active) */}
+      <StrengthWeek clientId={user.id} days={days} initialDayKey={initialDayKey} />
 
       {/* Progression charts */}
       {charts.length > 0 && (
