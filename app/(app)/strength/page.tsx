@@ -19,10 +19,11 @@ import {
   weeksElapsed,
   resolveDay,
   parseBaseWeights,
-  targetWeight,
+  liftTargetForDate,
   INCREMENTS,
   MAIN_LIFT_LABELS,
   type MainLift,
+  type DeloadEvent,
 } from '@/lib/strength'
 import { StrengthWeek, type WeekDay } from '@/components/app/StrengthWeek'
 import { StrengthSetup } from '@/components/app/StrengthSetup'
@@ -33,6 +34,7 @@ import type {
   StrengthConfig,
   StrengthEntry,
   StrengthSession,
+  StrengthDeload,
 } from '@/lib/supabase/types'
 
 export const metadata = { title: 'Strength' }
@@ -69,6 +71,21 @@ export default async function StrengthPage({
 
   const startDate = config?.start_date ?? today
   const baseWeights = parseBaseWeights(config?.base_weights)
+
+  // Deload events (per-lift failures) shape all target computation below.
+  const { data: deloadRows } = await supabase
+    .from('strength_deloads')
+    .select('lift, effective_date, baseline_week, new_baseline')
+    .eq('client_id', user.id)
+    .order('effective_date', { ascending: true })
+  const deloads: DeloadEvent[] = ((deloadRows ?? []) as StrengthDeload[]).map(
+    (d) => ({
+      lift: d.lift as MainLift,
+      effective_date: d.effective_date,
+      baseline_week: d.baseline_week,
+      new_baseline: Number(d.new_baseline),
+    })
+  )
 
   // Which week are we viewing? ?week=<Monday ISO>, else the current week.
   const weekParam = searchParams.week
@@ -111,7 +128,6 @@ export default async function StrengthPage({
   const days: WeekDay[] = DAY_ORDER.map((k, i) => {
     const d = WEEKLY_PLAN[k]
     const dateISO = weekDates[i]
-    const weeksForDay = weeksElapsed(startDate, dateISO)
     return {
       dayKey: k,
       label: d.label,
@@ -121,13 +137,14 @@ export default async function StrengthPage({
       dateISO,
       isToday: dateISO === today,
       isPast: dateISO < today,
-      exercises: resolveDay(d, baseWeights, weeksForDay),
+      exercises: resolveDay(d, baseWeights, startDate, dateISO, deloads),
       entries: entriesByDate[dateISO] ?? {},
       notes: notesByDate[dateISO] ?? '',
     }
   })
 
   const initialDayKey = isCurrentWeek ? dayKeyForDate(new Date()) : 'mon'
+  const activeWeek = weeksElapsed(startDate, today)
 
   // History for the progression charts (main lifts, actual weight over time).
   const window = historyWindowDays(plan)
@@ -211,7 +228,7 @@ export default async function StrengthPage({
                 {MAIN_LIFT_LABELS[lift]}
               </p>
               <p className="mt-1 font-mono text-xl font-bold text-washi">
-                {targetWeight(lift, baseWeights[lift], headerWeeks)}
+                {liftTargetForDate(lift, baseWeights, startDate, weekStartISO, deloads)}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">lb</span>
               </p>
               <p className="text-[0.65rem] text-kin">+{INCREMENTS[lift]}/wk</p>
@@ -221,7 +238,12 @@ export default async function StrengthPage({
       </div>
 
       {/* Week toggle + day (editable only on the active day) */}
-      <StrengthWeek clientId={user.id} days={days} initialDayKey={initialDayKey} />
+      <StrengthWeek
+        clientId={user.id}
+        days={days}
+        initialDayKey={initialDayKey}
+        activeWeek={activeWeek}
+      />
 
       {/* Progression charts */}
       {charts.length > 0 && (

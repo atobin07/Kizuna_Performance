@@ -177,16 +177,68 @@ export interface ResolvedExercise extends Exercise {
   target: number | null
 }
 
-/** Resolve a day's exercises with computed target weights for the given week. */
+/** A recorded failure/deload for a lift. */
+export interface DeloadEvent {
+  lift: MainLift
+  effective_date: string
+  baseline_week: number
+  new_baseline: number
+}
+
+/** Round to a loadable 0.5 lb. */
+export function roundLoad(n: number): number {
+  return Math.round(n * 2) / 2
+}
+
+/** The 20%-reduced baseline used when a lift is failed. */
+export function deloadBaseline(currentTarget: number): number {
+  // Reduce 20%, snap to the nearest 2.5 lb so it's actually loadable.
+  return Math.round((currentTarget * 0.8) / 2.5) * 2.5
+}
+
+/**
+ * Effective target for a lift on a given date, honoring deloads.
+ * Baseline starts at the program's base weight (week 0). Each deload that took
+ * effect strictly BEFORE this date resets the baseline; progression resumes
+ * linearly from the most recent one.
+ */
+export function liftTargetForDate(
+  lift: MainLift,
+  baseWeights: Partial<Record<MainLift, number>>,
+  startISO: string,
+  dateISO: string,
+  deloads: DeloadEvent[]
+): number {
+  const w = weeksElapsed(startISO, dateISO)
+  let seg = {
+    date: startISO,
+    week: 0,
+    baseline: baseWeights[lift] ?? DEFAULT_BASE_WEIGHTS[lift],
+  }
+  for (const d of deloads) {
+    if (d.lift !== lift) continue
+    // Applies to dates after the fail day; the fail day keeps its real target.
+    if (d.effective_date < dateISO && d.effective_date >= seg.date) {
+      seg = { date: d.effective_date, week: d.baseline_week, baseline: d.new_baseline }
+    }
+  }
+  return roundLoad(seg.baseline + INCREMENTS[lift] * Math.max(0, w - seg.week))
+}
+
+/** Resolve a day's exercises with deload-aware target weights. */
 export function resolveDay(
   day: DayPlan,
   baseWeights: Partial<Record<MainLift, number>>,
-  weeks: number
+  startISO: string,
+  dateISO: string,
+  deloads: DeloadEvent[]
 ): ResolvedExercise[] {
   return day.exercises.map((ex) => {
     if (ex.lift) {
-      const base = baseWeights[ex.lift] ?? DEFAULT_BASE_WEIGHTS[ex.lift]
-      return { ...ex, target: targetWeight(ex.lift, base, weeks) }
+      return {
+        ...ex,
+        target: liftTargetForDate(ex.lift, baseWeights, startISO, dateISO, deloads),
+      }
     }
     return { ...ex, target: null }
   })

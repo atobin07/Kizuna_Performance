@@ -270,12 +270,23 @@ export type StrengthEntry = {
   updated_at: string
 }
 
+export type StrengthDeload = {
+  id: string
+  client_id: string | null
+  lift: string
+  effective_date: string
+  baseline_week: number
+  new_baseline: number
+  created_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
       strength_config: TableDef<StrengthConfig>
       strength_sessions: TableDef<StrengthSession>
       strength_entries: TableDef<StrengthEntry>
+      strength_deloads: TableDef<StrengthDeload>
       profiles: TableDef<Profile>
       programs: TableDef<Program>
       workouts: TableDef<Workout>

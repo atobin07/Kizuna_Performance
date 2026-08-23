@@ -9,9 +9,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Check, Loader2 } from 'lucide-react'
+import { Check, Loader2, TrendingDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { ResolvedExercise, Category, DayKey } from '@/lib/strength'
+import {
+  deloadBaseline,
+  MAIN_LIFT_LABELS,
+  type ResolvedExercise,
+  type Category,
+  type DayKey,
+} from '@/lib/strength'
 import type { StrengthEntry } from '@/lib/supabase/types'
 
 interface RowState {
@@ -24,6 +30,7 @@ interface RowState {
 export interface StrengthDayProps {
   clientId: string
   logDate: string
+  logWeek: number
   dayKey: DayKey
   exercises: ResolvedExercise[]
   initialEntries: Record<string, StrengthEntry>
@@ -46,6 +53,7 @@ function num(v: string): number | null {
 export function StrengthDay({
   clientId,
   logDate,
+  logWeek,
   dayKey,
   exercises,
   initialEntries,
@@ -54,7 +62,45 @@ export function StrengthDay({
   const router = useRouter()
   const { toast } = useToast()
   const [saving, setSaving] = React.useState(false)
+  const [failing, setFailing] = React.useState<string | null>(null)
   const [notes, setNotes] = React.useState(initialNotes)
+
+  async function handleFail(ex: ResolvedExercise) {
+    if (!ex.lift || ex.target == null) return
+    const newBaseline = deloadBaseline(ex.target)
+    const label = MAIN_LIFT_LABELS[ex.lift]
+    const ok = window.confirm(
+      `Fail ${label} at ${ex.target} lb?\n\nIt will drop 20% to ${newBaseline} lb, and progression resumes from there for every future session. Today stays as logged.`
+    )
+    if (!ok) return
+
+    setFailing(ex.key)
+    const supabase = createClient()
+    const { error } = await supabase.from('strength_deloads').insert({
+      client_id: clientId,
+      lift: ex.lift,
+      effective_date: logDate,
+      baseline_week: logWeek,
+      new_baseline: newBaseline,
+    })
+    setFailing(null)
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Could not record the deload',
+        description: error.message,
+      })
+      return
+    }
+
+    track('strength_deload', { lift: ex.lift, from: ex.target, to: newBaseline })
+    toast({
+      title: `${label} deloaded to ${newBaseline} lb`,
+      description: 'Progression resumes from the new baseline next session.',
+    })
+    router.refresh()
+  }
 
   const [rows, setRows] = React.useState<Record<string, RowState>>(() => {
     const init: Record<string, RowState> = {}
@@ -191,7 +237,24 @@ export function StrengthDay({
                       {CATEGORY_LABEL[ex.category]}
                     </span>
                   </div>
-                  <p className="mt-0.5 text-sm text-kin">Prescribed: {planned}</p>
+                  <div className="mt-0.5 flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-sm text-kin">Prescribed: {planned}</p>
+                    {ex.lift && ex.target != null && (
+                      <button
+                        type="button"
+                        onClick={() => handleFail(ex)}
+                        disabled={failing === ex.key}
+                        className="inline-flex items-center gap-1 rounded-md border border-aka/50 px-2 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-aka transition-colors hover:bg-aka/10 disabled:opacity-50"
+                      >
+                        {failing === ex.key ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3" />
+                        )}
+                        Fail −20%
+                      </button>
+                    )}
+                  </div>
 
                   <div className="mt-3 grid grid-cols-3 gap-2">
                     <div>

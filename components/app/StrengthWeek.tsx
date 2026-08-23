@@ -26,6 +26,7 @@ export interface StrengthWeekProps {
   clientId: string
   days: WeekDay[]
   initialDayKey: DayKey
+  activeWeek: number
 }
 
 function plannedLabel(ex: ResolvedExercise): string {
@@ -92,7 +93,12 @@ function ReadOnlyDay({ day }: { day: WeekDay }) {
   )
 }
 
-export function StrengthWeek({ clientId, days, initialDayKey }: StrengthWeekProps) {
+export function StrengthWeek({
+  clientId,
+  days,
+  initialDayKey,
+  activeWeek,
+}: StrengthWeekProps) {
   const [selectedKey, setSelectedKey] = React.useState<DayKey>(initialDayKey)
   const day = days.find((d) => d.dayKey === selectedKey) ?? days[0]
 
@@ -149,6 +155,7 @@ export function StrengthWeek({ clientId, days, initialDayKey }: StrengthWeekProp
             <StrengthDay
               clientId={clientId}
               logDate={day.dateISO}
+              logWeek={activeWeek}
               dayKey={day.dayKey}
               exercises={day.exercises}
               initialEntries={day.entries}
