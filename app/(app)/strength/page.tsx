@@ -15,6 +15,7 @@ import { historyWindowDays, type Plan } from '@/lib/plan'
 import {
   WEEKLY_PLAN,
   DAY_ORDER,
+  LIFT_DAYS,
   dayKeyForDate,
   weeksElapsed,
   resolveDay,
@@ -148,6 +149,23 @@ export default async function StrengthPage({
   const initialDayKey = isCurrentWeek ? dayKeyForDate(new Date()) : 'mon'
   const activeWeek = weeksElapsed(startDate, today)
 
+  // Opening working weight for each lift's first session of the viewed week.
+  const weekTargets = {} as Record<MainLift, number>
+  for (const lift of MAIN_LIFTS) {
+    const firstDay =
+      weekDates.find((dt) =>
+        (LIFT_DAYS[lift] ?? []).includes(dayKeyForDate(fromISODate(dt)))
+      ) ?? weekStartISO
+    weekTargets[lift] = liftTargetForDate(
+      lift,
+      baseWeights,
+      startDate,
+      firstDay,
+      deloads,
+      increments
+    )
+  }
+
   // History for the progression charts (main lifts, actual weight over time).
   const window = historyWindowDays(plan)
   const since = lastNDays(window ?? 180)[0]
@@ -230,7 +248,7 @@ export default async function StrengthPage({
                 {MAIN_LIFT_LABELS[lift]}
               </p>
               <p className="mt-1 font-mono text-xl font-bold text-washi">
-                {liftTargetForDate(lift, baseWeights, startDate, weekStartISO, deloads, increments)}
+                {weekTargets[lift]}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">lb</span>
               </p>
               <p className="text-[0.65rem] text-kin">+{increments[lift]}/wk</p>

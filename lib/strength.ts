@@ -10,10 +10,12 @@
  *   Sat  Hang Clean + Pullups + abs
  *   Sun  Rest
  *
- * Progression: +5 lb squat / +10 lb deadlift / +2.5 lb every other barbell
- * lift, per week from the program start date.
+ * Progression is per SESSION: each time a lift is trained it adds from the
+ * previous session of that lift, so the configured WEEKLY increment is spread
+ * across however many times per week that lift is scheduled (e.g. squat +10/wk
+ * over 2 sessions = +5 each session; deadlift +10/wk over 1 session = +10).
  */
-import { fromISODate } from '@/lib/dates'
+import { fromISODate, addDays } from '@/lib/dates'
 
 export type MainLift = 'squat' | 'deadlift' | 'ohp' | 'bench' | 'hang_clean'
 export type Category = 'main' | 'bodyweight' | 'accessory' | 'abs'
@@ -153,6 +155,53 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
 
 export const DAY_ORDER: DayKey[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
+/** Which weekdays each main lift is scheduled on (derived from the plan). */
+export const LIFT_DAYS: Record<MainLift, DayKey[]> = (() => {
+  const map = {} as Record<MainLift, DayKey[]>
+  for (const k of DAY_ORDER) {
+    for (const ex of WEEKLY_PLAN[k].exercises) {
+      if (ex.lift) (map[ex.lift] ??= []).push(k)
+    }
+  }
+  return map
+})()
+
+/** Sessions per week for a lift (min 1). */
+export function sessionsPerWeek(lift: MainLift): number {
+  return LIFT_DAYS[lift]?.length || 1
+}
+
+/** Per-session weight step = weekly increment spread across the lift's sessions. */
+export function perSessionStep(
+  lift: MainLift,
+  increments: Record<MainLift, number> = INCREMENTS
+): number {
+  const weekly = increments[lift] || INCREMENTS[lift]
+  return roundLoad(weekly / sessionsPerWeek(lift))
+}
+
+/**
+ * Count scheduled sessions of a lift between two dates. When `inclusiveFrom`
+ * is true the range is [fromISO, toISO); otherwise (fromISO, toISO).
+ */
+function sessionsBetween(
+  lift: MainLift,
+  fromISO: string,
+  toISO: string,
+  inclusiveFrom: boolean
+): number {
+  const days = LIFT_DAYS[lift] ?? []
+  const to = fromISODate(toISO)
+  let cur = fromISODate(fromISO)
+  if (!inclusiveFrom) cur = addDays(cur, 1)
+  let count = 0
+  while (cur < to) {
+    if (days.includes(dayKeyForDate(cur))) count += 1
+    cur = addDays(cur, 1)
+  }
+  return count
+}
+
 /** JS getDay() (0=Sun) → our DayKey. */
 export function dayKeyForDate(d: Date = new Date()): DayKey {
   const map: DayKey[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -202,7 +251,7 @@ export function deloadBaseline(
   lift: MainLift,
   increments: Record<MainLift, number> = INCREMENTS
 ): number {
-  const step = increments[lift] || INCREMENTS[lift]
+  const step = perSessionStep(lift, increments)
   return Math.round((currentTarget * 0.8) / step) * step
 }
 
@@ -220,21 +269,23 @@ export function liftTargetForDate(
   deloads: DeloadEvent[],
   increments: Record<MainLift, number> = INCREMENTS
 ): number {
-  const w = weeksElapsed(startISO, dateISO)
-  const step = increments[lift] || INCREMENTS[lift]
+  const step = perSessionStep(lift, increments)
+  // Base segment counts sessions from the start date inclusively; a deload
+  // segment counts sessions strictly after the fail date (the fail day itself
+  // keeps its pre-deload weight).
   let seg = {
     date: startISO,
-    week: 0,
     baseline: baseWeights[lift] ?? DEFAULT_BASE_WEIGHTS[lift],
+    inclusiveFrom: true,
   }
   for (const d of deloads) {
     if (d.lift !== lift) continue
-    // Applies to dates after the fail day; the fail day keeps its real target.
     if (d.effective_date < dateISO && d.effective_date >= seg.date) {
-      seg = { date: d.effective_date, week: d.baseline_week, baseline: d.new_baseline }
+      seg = { date: d.effective_date, baseline: d.new_baseline, inclusiveFrom: false }
     }
   }
-  return roundLoad(seg.baseline + step * Math.max(0, w - seg.week))
+  const priorSessions = sessionsBetween(lift, seg.date, dateISO, seg.inclusiveFrom)
+  return roundLoad(seg.baseline + step * priorSessions)
 }
 
 /** Resolve a day's exercises with deload-aware target weights. */
