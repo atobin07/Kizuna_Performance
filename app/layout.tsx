@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
+import { PWARegister } from '@/components/PWARegister'
 
 export const metadata: Metadata = {
   title: {
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-sumi text-washi">
         {children}
         <Toaster />
+        <PWARegister />
       </body>
     </html>
   )
