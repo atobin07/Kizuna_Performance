@@ -79,9 +79,9 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     exercises: [
       { key: 'squat', name: 'Back Squat', category: 'main', sets: 5, reps: '5', lift: 'squat' },
       { key: 'ohp', name: 'Overhead Press', category: 'main', sets: 5, reps: '5', lift: 'ohp' },
-      { key: 'bulgarian_split_squat', name: 'Bulgarian Split Squat (DB)', category: 'accessory', sets: 3, reps: '8 / leg' },
-      { key: 'lateral_raise', name: 'DB Lateral Raise', category: 'accessory', sets: 3, reps: '15' },
-      { key: 'face_pull', name: 'DB Rear-Delt Fly', category: 'accessory', sets: 3, reps: '15' },
+      { key: 'reverse_lunge', name: 'DB/KB Reverse Lunge — build strength', category: 'accessory', sets: 4, reps: '6 / leg' },
+      { key: 'tall_kneeling_press', name: 'Tall-Kneeling KB Overhead Press', category: 'accessory', sets: 3, reps: '8' },
+      { key: 'rear_delt_fly', name: 'DB Rear-Delt Fly', category: 'accessory', sets: 3, reps: '12' },
     ],
   },
   tue: {
@@ -91,10 +91,10 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     exercises: [
       { key: 'deadlift', name: 'Deadlift', category: 'main', sets: 3, reps: '5', lift: 'deadlift' },
       { key: 'pullups', name: 'Pull-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
-      { key: 'romanian_deadlift', name: 'Romanian Deadlift (BB)', category: 'accessory', sets: 3, reps: '10' },
-      { key: 'barbell_row', name: 'Barbell Row', category: 'accessory', sets: 3, reps: '10' },
+      { key: 'walking_lunge', name: 'DB Walking Lunge — build strength', category: 'accessory', sets: 4, reps: '8 / leg' },
+      { key: 'kb_swing', name: 'KB Swing (hip hinge power)', category: 'accessory', sets: 3, reps: '12' },
+      { key: 'single_arm_row', name: 'Single-Arm DB Row', category: 'accessory', sets: 3, reps: '10 / side' },
       { key: 'hanging_leg_raise', name: 'Hanging Leg Raise', category: 'abs', sets: 3, reps: '12' },
-      { key: 'cable_crunch', name: 'Weighted Sit-up (DB/KB)', category: 'abs', sets: 3, reps: '15' },
     ],
   },
   wed: {
@@ -103,11 +103,11 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     title: 'Bench + Push-ups',
     exercises: [
       { key: 'bench', name: 'Bench Press', category: 'main', sets: 5, reps: '5', lift: 'bench' },
-      { key: 'pushups', name: 'Push-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
+      { key: 'weighted_pushup', name: 'Weighted Push-up — build strength', category: 'accessory', sets: 5, reps: '5' },
+      { key: 'single_arm_floor_press', name: 'Single-Arm DB Floor Press', category: 'accessory', sets: 3, reps: '8 / side' },
       { key: 'incline_db_press', name: 'Incline DB Press', category: 'accessory', sets: 3, reps: '10' },
-      { key: 'chest_supported_row', name: 'Chest-Supported DB Row', category: 'accessory', sets: 3, reps: '12' },
-      { key: 'triceps_pushdown', name: 'DB Skull Crusher', category: 'accessory', sets: 3, reps: '12' },
-      { key: 'db_hammer_curl', name: 'DB Hammer Curl', category: 'accessory', sets: 3, reps: '12' },
+      { key: 'single_arm_row', name: 'Single-Arm DB Row', category: 'accessory', sets: 3, reps: '10 / side' },
+      { key: 'db_skullcrusher', name: 'DB Skull Crusher (triceps lockout)', category: 'accessory', sets: 3, reps: '10' },
     ],
   },
   thu: {
@@ -124,11 +124,10 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     exercises: [
       { key: 'squat', name: 'Back Squat', category: 'main', sets: 5, reps: '5', lift: 'squat' },
       { key: 'bench', name: 'Bench Press', category: 'main', sets: 5, reps: '5', lift: 'bench' },
-      { key: 'pushups', name: 'Push-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
-      { key: 'leg_press', name: 'DB Walking Lunge', category: 'accessory', sets: 3, reps: '10 / leg' },
-      { key: 'cable_fly', name: 'Flat DB Fly', category: 'accessory', sets: 3, reps: '15' },
-      { key: 'hamstring_curl', name: 'Single-Leg DB RDL', category: 'accessory', sets: 3, reps: '10 / leg' },
-      { key: 'rear_delt_fly', name: 'DB Rear-Delt Fly', category: 'accessory', sets: 3, reps: '15' },
+      { key: 'bulgarian_split_squat', name: 'DB Bulgarian Split Squat — build strength', category: 'accessory', sets: 4, reps: '6 / leg' },
+      { key: 'weighted_pushup', name: 'Weighted Push-up — build strength', category: 'accessory', sets: 4, reps: '6' },
+      { key: 'single_leg_rdl', name: 'Single-Leg DB RDL', category: 'accessory', sets: 3, reps: '10 / leg' },
+      { key: 'db_fly', name: 'Flat DB Fly', category: 'accessory', sets: 3, reps: '12' },
     ],
   },
   sat: {
@@ -138,9 +137,9 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     exercises: [
       { key: 'hang_clean', name: 'Hang Clean', category: 'main', sets: 5, reps: '3', lift: 'hang_clean' },
       { key: 'pullups', name: 'Pull-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
-      { key: 'front_squat', name: 'Front Squat (BB)', category: 'accessory', sets: 3, reps: '5' },
-      { key: 'ab_wheel', name: 'Half-Kneeling KB Press-Out', category: 'abs', sets: 3, reps: '10 / side' },
-      { key: 'cable_woodchop', name: 'KB Russian Twist', category: 'abs', sets: 3, reps: '12 / side' },
+      { key: 'front_rack_lunge', name: 'Front-Racked KB Reverse Lunge — build strength', category: 'accessory', sets: 3, reps: '8 / leg' },
+      { key: 'kb_pressout', name: 'Half-Kneeling KB Press-Out', category: 'abs', sets: 3, reps: '10 / side' },
+      { key: 'kb_russian_twist', name: 'KB Russian Twist', category: 'abs', sets: 3, reps: '12 / side' },
       { key: 'farmer_carry', name: "Farmer's Carry (DB/KB)", category: 'accessory', sets: 3, reps: '40 yd' },
     ],
   },
