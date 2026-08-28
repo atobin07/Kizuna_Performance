@@ -58,13 +58,23 @@ export default function GlobalError({
           </p>
           <button
             type="button"
-            onClick={() => {
+            onClick={async () => {
+              // Fully tear down the old service worker + caches BEFORE reloading
+              // (reloading too early is what left the app stuck).
               try {
-                reset()
+                if ('serviceWorker' in navigator) {
+                  const regs = await navigator.serviceWorker.getRegistrations()
+                  await Promise.all(regs.map((r) => r.unregister()))
+                }
+                if (typeof caches !== 'undefined') {
+                  const keys = await caches.keys()
+                  await Promise.all(keys.map((k) => caches.delete(k)))
+                }
               } catch {
                 // ignore
               }
-              window.location.reload()
+              // Cache-busting navigation guarantees fresh HTML + chunks.
+              window.location.href = `/dashboard?fresh=${Date.now()}`
             }}
             style={{
               background: '#E7B24C',
