@@ -2,28 +2,30 @@
 
 import { useEffect } from 'react'
 
-/** Registers the service worker so the site installs as a true PWA. */
+/**
+ * We no longer use a caching service worker (it caused stale "failed to load"
+ * pages after deploys). This component just cleans up: it unregisters any
+ * previously-installed worker and clears its caches, so the app always loads
+ * the latest version from the network — no reinstalls needed for updates.
+ */
 export function PWARegister() {
   useEffect(() => {
-    if (!('serviceWorker' in navigator)) return
-
-    // When a new worker takes control (e.g. after a deploy), reload ONCE so the
-    // page is served by the fresh worker instead of stale cached assets.
-    let reloaded = false
-    const onChange = () => {
-      if (reloaded) return
-      reloaded = true
-      window.location.reload()
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((regs) => regs.forEach((r) => r.unregister()))
+          .catch(() => {})
+      }
+      if (typeof caches !== 'undefined') {
+        caches
+          .keys()
+          .then((keys) => keys.forEach((k) => caches.delete(k)))
+          .catch(() => {})
+      }
+    } catch {
+      // ignore
     }
-    navigator.serviceWorker.addEventListener('controllerchange', onChange)
-
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((reg) => reg.update().catch(() => {}))
-      .catch(() => {})
-
-    return () =>
-      navigator.serviceWorker.removeEventListener('controllerchange', onChange)
   }, [])
   return null
 }
