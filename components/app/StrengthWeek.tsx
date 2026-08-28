@@ -165,6 +165,7 @@ export function StrengthWeek({
             </div>
           ) : day.isToday || day.isPast ? (
             <StrengthDay
+              key={day.dateISO}
               clientId={clientId}
               logDate={day.dateISO}
               logWeek={day.weekIndex}

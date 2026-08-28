@@ -205,6 +205,7 @@ export function StrengthDay({
       <ul className="divide-y divide-border overflow-hidden rounded-lg border border-border">
         {exercises.map((ex) => {
           const r = rows[ex.key]
+          if (!r) return null
           const planned =
             ex.target != null
               ? `${ex.sets}×${ex.reps} @ ${ex.target} lb`
