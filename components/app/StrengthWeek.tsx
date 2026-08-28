@@ -17,6 +17,7 @@ export interface WeekDay {
   dateISO: string
   isToday: boolean
   isPast: boolean
+  optional: boolean
   weekIndex: number
   exercises: ResolvedExercise[]
   entries: Record<string, StrengthEntry>
@@ -137,6 +138,11 @@ export function StrengthWeek({
           {!day.rest && day.isToday && (
             <span className="rounded-full bg-kin/15 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-kin">
               Active day
+            </span>
+          )}
+          {!day.rest && day.optional && !day.isToday && (
+            <span className="rounded-full bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-muted-foreground">
+              Optional
             </span>
           )}
           {!day.rest && day.isPast && (

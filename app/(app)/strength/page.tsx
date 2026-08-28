@@ -137,6 +137,7 @@ export default async function StrengthPage({
       shortLabel: d.label.slice(0, 3),
       title: d.title,
       rest: Boolean(d.rest),
+      optional: Boolean(d.optional),
       dateISO,
       isToday: dateISO === today,
       isPast: dateISO < today,
