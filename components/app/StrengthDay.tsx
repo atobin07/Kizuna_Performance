@@ -127,6 +127,15 @@ export function StrengthDay({
   const update = (key: string, patch: Partial<RowState>) =>
     setRows((r) => ({ ...r, [key]: { ...r[key], ...patch } }))
 
+  // One-off day-to-day weight nudge (does NOT change the schedule/targets).
+  const adjustWeight = (key: string, delta: number) =>
+    setRows((r) => {
+      const cur = Number(r[key].actual_weight)
+      const base = Number.isNaN(cur) ? 0 : cur
+      const next = Math.max(0, Math.round((base + delta) * 2) / 2)
+      return { ...r, [key]: { ...r[key], actual_weight: String(next) } }
+    })
+
   const completedCount = Object.values(rows).filter((r) => r.completed).length
 
   async function save() {
@@ -260,21 +269,40 @@ export function StrengthDay({
                     )}
                   </div>
 
-                  <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div className="mt-3 space-y-2">
                     <div>
                       <Label className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                        Weight
+                        Weight (lb) — tap to go lighter/heavier
                       </Label>
-                      <Input
-                        type="number"
-                        inputMode="decimal"
-                        step="2.5"
-                        placeholder="lb"
-                        value={r.actual_weight}
-                        onChange={(e) => update(ex.key, { actual_weight: e.target.value })}
-                        className="mt-1 h-9"
-                      />
+                      <div className="mt-1 flex items-center gap-2">
+                        <button
+                          type="button"
+                          aria-label="Decrease weight 5 lb"
+                          onClick={() => adjustWeight(ex.key, -5)}
+                          className="flex h-9 w-11 shrink-0 items-center justify-center rounded-md border border-input text-sm font-semibold text-muted-foreground transition-colors hover:border-kin/50 hover:text-washi"
+                        >
+                          −5
+                        </button>
+                        <Input
+                          type="number"
+                          inputMode="decimal"
+                          step="2.5"
+                          placeholder="lb"
+                          value={r.actual_weight}
+                          onChange={(e) => update(ex.key, { actual_weight: e.target.value })}
+                          className="h-9 flex-1 text-center"
+                        />
+                        <button
+                          type="button"
+                          aria-label="Increase weight 5 lb"
+                          onClick={() => adjustWeight(ex.key, 5)}
+                          className="flex h-9 w-11 shrink-0 items-center justify-center rounded-md border border-input text-sm font-semibold text-muted-foreground transition-colors hover:border-kin/50 hover:text-washi"
+                        >
+                          +5
+                        </button>
+                      </div>
                     </div>
+                    <div className="grid grid-cols-2 gap-2">
                     <div>
                       <Label className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
                         Sets
@@ -300,6 +328,7 @@ export function StrengthDay({
                         className="mt-1 h-9"
                       />
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
