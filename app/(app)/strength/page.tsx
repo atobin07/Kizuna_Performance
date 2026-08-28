@@ -140,6 +140,7 @@ export default async function StrengthPage({
       dateISO,
       isToday: dateISO === today,
       isPast: dateISO < today,
+      weekIndex: weeksElapsed(startDate, dateISO),
       exercises: resolveDay(d, baseWeights, startDate, dateISO, deloads, increments),
       entries: entriesByDate[dateISO] ?? {},
       notes: notesByDate[dateISO] ?? '',
@@ -147,7 +148,6 @@ export default async function StrengthPage({
   })
 
   const initialDayKey = isCurrentWeek ? dayKeyForDate(new Date()) : 'mon'
-  const activeWeek = weeksElapsed(startDate, today)
 
   // Opening working weight for each lift's first session of the viewed week.
   const weekTargets = {} as Record<MainLift, number>
@@ -262,7 +262,6 @@ export default async function StrengthPage({
         clientId={user.id}
         days={days}
         initialDayKey={initialDayKey}
-        activeWeek={activeWeek}
         increments={increments}
       />
 

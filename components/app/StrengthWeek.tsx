@@ -17,6 +17,7 @@ export interface WeekDay {
   dateISO: string
   isToday: boolean
   isPast: boolean
+  weekIndex: number
   exercises: ResolvedExercise[]
   entries: Record<string, StrengthEntry>
   notes: string
@@ -26,7 +27,6 @@ export interface StrengthWeekProps {
   clientId: string
   days: WeekDay[]
   initialDayKey: DayKey
-  activeWeek: number
   increments: Record<MainLift, number>
 }
 
@@ -98,7 +98,6 @@ export function StrengthWeek({
   clientId,
   days,
   initialDayKey,
-  activeWeek,
   increments,
 }: StrengthWeekProps) {
   const [selectedKey, setSelectedKey] = React.useState<DayKey>(initialDayKey)
@@ -135,9 +134,14 @@ export function StrengthWeek({
           <CardTitle className="text-base uppercase tracking-wider">
             {day.label} — {day.title}
           </CardTitle>
-          {day.isToday && !day.rest && (
+          {!day.rest && day.isToday && (
             <span className="rounded-full bg-kin/15 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-kin">
               Active day
+            </span>
+          )}
+          {!day.rest && day.isPast && (
+            <span className="rounded-full bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-muted-foreground">
+              Past · editable
             </span>
           )}
         </CardHeader>
@@ -153,11 +157,11 @@ export function StrengthWeek({
                 today so you can hit next week&apos;s numbers.
               </p>
             </div>
-          ) : day.isToday ? (
+          ) : day.isToday || day.isPast ? (
             <StrengthDay
               clientId={clientId}
               logDate={day.dateISO}
-              logWeek={activeWeek}
+              logWeek={day.weekIndex}
               dayKey={day.dayKey}
               exercises={day.exercises}
               increments={increments}
