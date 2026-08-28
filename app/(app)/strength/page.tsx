@@ -251,7 +251,7 @@ export default async function StrengthPage({
                 {weekTargets[lift]}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">lb</span>
               </p>
-              <p className="text-[0.65rem] text-kin">+{increments[lift]}/wk</p>
+              <p className="text-[0.65rem] text-kin">+{increments[lift]}/session</p>
             </CardContent>
           </Card>
         ))}

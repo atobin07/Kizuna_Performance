@@ -21,12 +21,16 @@ export type MainLift = 'squat' | 'deadlift' | 'ohp' | 'bench' | 'hang_clean'
 export type Category = 'main' | 'bodyweight' | 'accessory' | 'abs'
 export type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 
-/** Default weekly weight added to each progressed lift (lb) — user-overridable. */
+/**
+ * Weight added to each lift EVERY TIME it is trained (per session), lb.
+ * The lift climbs by this amount each time it comes back up in the week.
+ * User-overridable.
+ */
 export const INCREMENTS: Record<MainLift, number> = {
-  squat: 10,
+  squat: 5,
   deadlift: 10,
   ohp: 2.5,
-  bench: 5,
+  bench: 2.5,
   hang_clean: 2.5,
 }
 
@@ -170,13 +174,12 @@ export function sessionsPerWeek(lift: MainLift): number {
   return LIFT_DAYS[lift]?.length || 1
 }
 
-/** Per-session weight step = weekly increment spread across the lift's sessions. */
+/** Per-session weight step — the amount added each time the lift is trained. */
 export function perSessionStep(
   lift: MainLift,
   increments: Record<MainLift, number> = INCREMENTS
 ): number {
-  const weekly = increments[lift] || INCREMENTS[lift]
-  return roundLoad(weekly / sessionsPerWeek(lift))
+  return roundLoad(increments[lift] || INCREMENTS[lift])
 }
 
 /**

@@ -109,7 +109,7 @@ export function StrengthSetup({
       </div>
 
       <div>
-        <Label className="mb-2 block">Starting weight &amp; weekly add per lift</Label>
+        <Label className="mb-2 block">Starting weight &amp; add-per-session per lift</Label>
         <div className="space-y-3">
           {LIFTS.map((lift) => (
             <div
@@ -141,7 +141,7 @@ export function StrengthSetup({
 
                 <div>
                   <span className="mb-1.5 block text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                    Weekly add (lb)
+                    Add each session (lb)
                   </span>
                   <div className="inline-flex overflow-hidden rounded-md border border-input">
                     {INCREMENT_OPTIONS.map((opt, i) => (
