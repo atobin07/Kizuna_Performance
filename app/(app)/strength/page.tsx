@@ -184,7 +184,7 @@ export default async function StrengthPage({
   const charts = MAIN_LIFTS.map((lift) => {
     const data = history
       .filter((h) => h.exercise_key === lift && h.actual_weight != null)
-      .map((h) => ({ date: h.log_date.slice(5), value: Number(h.actual_weight) }))
+      .map((h) => ({ date: h.log_date, value: Number(h.actual_weight) }))
     return { lift, data }
   }).filter((c) => c.data.length > 0)
 

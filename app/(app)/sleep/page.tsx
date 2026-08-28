@@ -51,7 +51,7 @@ export default async function SleepPage() {
   const chartData = recent
     .filter((l) => l.duration_min != null)
     .map((l) => ({
-      date: l.log_date.slice(5),
+      date: l.log_date,
       value: Math.round(((l.duration_min as number) / 60) * 10) / 10,
     }))
 
