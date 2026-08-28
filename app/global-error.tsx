@@ -5,7 +5,13 @@ import { useEffect } from 'react'
 // Catches any uncaught client-side error (e.g. a ChunkLoadError from a stale
 // cached page after a new deploy) and self-heals: clears the service worker and
 // all caches, then lets the user reload into the fresh version.
-export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
   useEffect(() => {
     try {
       if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -73,6 +79,18 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           >
             Reload
           </button>
+          <p
+            style={{
+              marginTop: '1.5rem',
+              fontSize: '0.7rem',
+              lineHeight: 1.4,
+              color: '#645f57',
+              wordBreak: 'break-word',
+            }}
+          >
+            {[error?.name, error?.message].filter(Boolean).join(': ') || 'Unknown error'}
+            {error?.digest ? ` · ${error.digest}` : ''}
+          </p>
         </div>
       </body>
     </html>

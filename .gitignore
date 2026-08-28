@@ -36,3 +36,4 @@ yarn-error.log*
 # python (legacy)
 __pycache__/
 *.py[cod]
+.env.local
