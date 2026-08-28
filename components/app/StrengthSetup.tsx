@@ -114,41 +114,44 @@ export function StrengthSetup({
           {LIFTS.map((lift) => (
             <div
               key={lift}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card px-3 py-2.5"
+              className="rounded-lg border border-border bg-card p-4"
             >
-              <p className="text-sm font-medium text-washi">
+              <p className="mb-3 font-medium text-washi">
                 {MAIN_LIFT_LABELS[lift]}
               </p>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                    Start
+              <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+                <div>
+                  <span className="mb-1.5 block text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                    Starting weight
                   </span>
-                  <Input
-                    type="number"
-                    inputMode="decimal"
-                    step="2.5"
-                    value={weights[lift]}
-                    onChange={(e) =>
-                      setWeights((w) => ({ ...w, [lift]: e.target.value }))
-                    }
-                    className="h-9 w-20"
-                  />
-                  <span className="text-xs text-muted-foreground">lb</span>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      inputMode="decimal"
+                      step="2.5"
+                      value={weights[lift]}
+                      onChange={(e) =>
+                        setWeights((w) => ({ ...w, [lift]: e.target.value }))
+                      }
+                      className="h-10 w-24"
+                    />
+                    <span className="text-sm text-muted-foreground">lb</span>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                    +/wk
+                <div>
+                  <span className="mb-1.5 block text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                    Weekly add (lb)
                   </span>
-                  <div className="flex overflow-hidden rounded-md border border-input">
-                    {INCREMENT_OPTIONS.map((opt) => (
+                  <div className="inline-flex overflow-hidden rounded-md border border-input">
+                    {INCREMENT_OPTIONS.map((opt, i) => (
                       <button
                         key={opt}
                         type="button"
                         onClick={() => setIncs((s) => ({ ...s, [lift]: opt }))}
                         className={cn(
-                          'px-2.5 py-1.5 text-xs font-semibold transition-colors',
+                          'h-10 min-w-[3rem] px-3 text-sm font-semibold transition-colors',
+                          i > 0 && 'border-l border-input',
                           incs[lift] === opt
                             ? 'bg-kin text-sumi'
                             : 'text-muted-foreground hover:text-washi'
