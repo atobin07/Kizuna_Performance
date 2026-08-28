@@ -1,8 +1,30 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { MealType } from '@/lib/supabase/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+/** Display order + labels for meal categories (incl. workout nutrition). */
+export const MEAL_ORDER: MealType[] = [
+  'breakfast',
+  'lunch',
+  'dinner',
+  'snack',
+  'pre_workout',
+  'intra_workout',
+  'post_workout',
+]
+
+export const MEAL_LABELS: Record<MealType, string> = {
+  breakfast: 'Breakfast',
+  lunch: 'Lunch',
+  dinner: 'Dinner',
+  snack: 'Snack',
+  pre_workout: 'Pre-workout',
+  intra_workout: 'Intra-workout',
+  post_workout: 'Post-workout',
 }
 
 export function formatDate(date: string | Date, opts?: Intl.DateTimeFormatOptions) {

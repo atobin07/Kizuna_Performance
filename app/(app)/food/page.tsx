@@ -6,11 +6,10 @@ import { FoodLogger } from '@/components/app/FoodLogger'
 import { UpgradeCard } from '@/components/app/UpgradeCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { FoodLog, MealType, NutritionTarget } from '@/lib/supabase/types'
+import type { FoodLog, NutritionTarget } from '@/lib/supabase/types'
+import { MEAL_ORDER, MEAL_LABELS } from '@/lib/utils'
 
 export const metadata = { title: 'Food' }
-
-const MEAL_ORDER: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
 
 function sum(logs: FoodLog[], key: keyof FoodLog): number {
   return logs.reduce((acc, l) => acc + (Number(l[key]) || 0), 0)
@@ -150,8 +149,8 @@ export default async function FoodPage() {
               return (
                 <div key={meal}>
                   <div className="mb-2 flex items-center gap-2">
-                    <Badge variant="muted" className="capitalize">
-                      {meal}
+                    <Badge variant="muted">
+                      {MEAL_LABELS[meal]}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
                       {Math.round(sum(items, 'calories'))} kcal

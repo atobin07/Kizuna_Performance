@@ -12,8 +12,17 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2, Plus } from 'lucide-react'
+import { MEAL_LABELS } from '@/lib/utils'
 
-const MEALS = ['breakfast', 'lunch', 'dinner', 'snack'] as const
+const MEALS = [
+  'breakfast',
+  'lunch',
+  'dinner',
+  'snack',
+  'pre_workout',
+  'intra_workout',
+  'post_workout',
+] as const
 
 export interface FoodLoggerProps {
   clientId: string
@@ -86,11 +95,11 @@ export function FoodLogger({ clientId, logDate }: FoodLoggerProps) {
           <select
             id="fl-meal"
             {...register('meal')}
-            className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm capitalize text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {MEALS.map((m) => (
-              <option key={m} value={m} className="bg-sumi capitalize">
-                {m}
+              <option key={m} value={m} className="bg-sumi">
+                {MEAL_LABELS[m]}
               </option>
             ))}
           </select>

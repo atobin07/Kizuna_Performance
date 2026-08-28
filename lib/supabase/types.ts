@@ -30,7 +30,14 @@ export type Profile = {
   created_at: string
 }
 
-export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
+export type MealType =
+  | 'breakfast'
+  | 'lunch'
+  | 'dinner'
+  | 'snack'
+  | 'pre_workout'
+  | 'intra_workout'
+  | 'post_workout'
 
 export type SleepLog = {
   id: string
