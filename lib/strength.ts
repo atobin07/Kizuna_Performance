@@ -108,7 +108,7 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     title: 'Bench + Push-ups',
     exercises: [
       { key: 'bench', name: 'Bench Press', category: 'main', sets: 5, reps: '5', lift: 'bench' },
-      { key: 'weighted_pushup', name: 'Weighted Push-up — build strength', category: 'accessory', sets: 5, reps: '5' },
+      { key: 'pushups', name: 'Push-ups — volume', category: 'bodyweight', sets: 5, reps: 'AMRAP' },
       { key: 'single_arm_floor_press', name: 'Single-Arm DB Floor Press', category: 'accessory', sets: 3, reps: '8 / side' },
       { key: 'incline_db_press', name: 'Incline DB Press', category: 'accessory', sets: 3, reps: '10' },
       { key: 'single_arm_row', name: 'Single-Arm DB Row', category: 'accessory', sets: 3, reps: '10 / side' },
@@ -130,7 +130,7 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
       { key: 'squat', name: 'Back Squat', category: 'main', sets: 5, reps: '5', lift: 'squat' },
       { key: 'bench', name: 'Bench Press', category: 'main', sets: 5, reps: '5', lift: 'bench' },
       { key: 'bulgarian_split_squat', name: 'DB Bulgarian Split Squat — build strength', category: 'accessory', sets: 4, reps: '6 / leg' },
-      { key: 'weighted_pushup', name: 'Weighted Push-up — build strength', category: 'accessory', sets: 4, reps: '6' },
+      { key: 'pushups', name: 'Push-ups — volume', category: 'bodyweight', sets: 4, reps: 'AMRAP' },
       { key: 'single_leg_rdl', name: 'Single-Leg DB RDL', category: 'accessory', sets: 3, reps: '10 / leg' },
       { key: 'db_fly', name: 'Flat DB Fly', category: 'accessory', sets: 3, reps: '12' },
     ],
