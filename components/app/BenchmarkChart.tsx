@@ -12,9 +12,33 @@ import {
 import { formatDate } from '@/lib/utils'
 
 export interface BenchmarkChartProps {
-  data: { date: string; value: number }[]
+  data: { date: string; value: number; logged?: boolean }[]
   unit?: string
   movement?: string
+}
+
+// Solid gold dot for a saved value; hollow (open) dot when nothing was logged
+// for that session — it sits on the scheduled target line.
+function ProgressDot(props: {
+  cx?: number
+  cy?: number
+  index?: number
+  payload?: { logged?: boolean }
+}) {
+  const { cx, cy, index, payload } = props
+  if (cx == null || cy == null) return <g key={index} />
+  const logged = payload?.logged !== false
+  return (
+    <circle
+      key={index}
+      cx={cx}
+      cy={cy}
+      r={4}
+      fill={logged ? '#C4922A' : '#0B0B0C'}
+      stroke="#C4922A"
+      strokeWidth={2}
+    />
+  )
 }
 
 /** Recharts line chart for a single movement's benchmark history. */
@@ -65,7 +89,7 @@ export function BenchmarkChart({ data, unit, movement }: BenchmarkChartProps) {
           dataKey="value"
           stroke="#C4922A"
           strokeWidth={2}
-          dot={{ r: 3, fill: '#C4922A', strokeWidth: 0 }}
+          dot={<ProgressDot />}
           activeDot={{ r: 5, fill: '#C4922A' }}
         />
       </LineChart>

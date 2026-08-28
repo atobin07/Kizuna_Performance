@@ -195,15 +195,18 @@ export default async function StrengthPage({
       }
     }
     const liftDays = LIFT_DAYS[lift] ?? []
-    const data: { date: string; value: number }[] = []
+    const data: { date: string; value: number; logged: boolean }[] = []
     let cur = fromISODate(chartStartISO)
     while (cur <= todayDate) {
       const iso = toISODate(cur)
       if (liftDays.includes(dayKeyForDate(cur))) {
+        const actual = actualByDate.get(iso)
+        // Solid point = an actual weight you saved; hollow point (sits on the
+        // scheduled target) = a session you didn't log.
         const value =
-          actualByDate.get(iso) ??
+          actual ??
           liftTargetForDate(lift, baseWeights, startDate, iso, deloads, increments)
-        data.push({ date: iso, value })
+        data.push({ date: iso, value, logged: actual != null })
       }
       cur = addDays(cur, 1)
     }
