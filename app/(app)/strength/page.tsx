@@ -181,10 +181,31 @@ export default async function StrengthPage({
     'log_date' | 'exercise_key' | 'actual_weight' | 'category'
   >[]
 
+  // Plot the full progression: every scheduled session from program start
+  // through today, using the actual logged weight where present, otherwise the
+  // deload-adjusted target for that session. Gives a real climbing line.
+  const chartStartISO = startDate > since ? startDate : since
+  const todayDate = fromISODate(today)
   const charts = MAIN_LIFTS.map((lift) => {
-    const data = history
-      .filter((h) => h.exercise_key === lift && h.actual_weight != null)
-      .map((h) => ({ date: h.log_date, value: Number(h.actual_weight) }))
+    const actualByDate = new Map<string, number>()
+    for (const h of history) {
+      if (h.exercise_key === lift && h.actual_weight != null) {
+        actualByDate.set(h.log_date, Number(h.actual_weight))
+      }
+    }
+    const liftDays = LIFT_DAYS[lift] ?? []
+    const data: { date: string; value: number }[] = []
+    let cur = fromISODate(chartStartISO)
+    while (cur <= todayDate) {
+      const iso = toISODate(cur)
+      if (liftDays.includes(dayKeyForDate(cur))) {
+        const value =
+          actualByDate.get(iso) ??
+          liftTargetForDate(lift, baseWeights, startDate, iso, deloads, increments)
+        data.push({ date: iso, value })
+      }
+      cur = addDays(cur, 1)
+    }
     return { lift, data }
   }).filter((c) => c.data.length > 0)
 
@@ -272,7 +293,7 @@ export default async function StrengthPage({
             <Card key={c.lift}>
               <CardHeader>
                 <CardTitle className="text-base uppercase tracking-wider">
-                  {MAIN_LIFT_LABELS[c.lift]} — logged weight
+                  {MAIN_LIFT_LABELS[c.lift]} — progression
                 </CardTitle>
               </CardHeader>
               <CardContent>
