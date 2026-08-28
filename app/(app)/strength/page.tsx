@@ -261,7 +261,7 @@ export default async function StrengthPage({
       </div>
 
       {/* This week's main-lift targets */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {MAIN_LIFTS.map((lift) => (
           <Card key={lift}>
             <CardContent className="p-4">

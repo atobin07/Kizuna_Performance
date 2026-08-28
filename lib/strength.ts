@@ -17,7 +17,13 @@
  */
 import { fromISODate, addDays } from '@/lib/dates'
 
-export type MainLift = 'squat' | 'deadlift' | 'ohp' | 'bench' | 'hang_clean'
+export type MainLift =
+  | 'squat'
+  | 'deadlift'
+  | 'ohp'
+  | 'bench'
+  | 'hang_clean'
+  | 'weighted_pullup'
 export type Category = 'main' | 'bodyweight' | 'accessory' | 'abs'
 export type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 
@@ -32,6 +38,7 @@ export const INCREMENTS: Record<MainLift, number> = {
   ohp: 2.5,
   bench: 2.5,
   hang_clean: 2.5,
+  weighted_pullup: 2.5,
 }
 
 /** Allowed weekly increments the athlete can pick per lift. */
@@ -43,6 +50,7 @@ export const MAIN_LIFT_LABELS: Record<MainLift, string> = {
   ohp: 'Overhead Press',
   bench: 'Bench Press',
   hang_clean: 'Hang Clean',
+  weighted_pullup: 'Weighted Pull-up',
 }
 
 /** Sensible starting weights (lb) — the athlete overrides these in setup. */
@@ -52,6 +60,7 @@ export const DEFAULT_BASE_WEIGHTS: Record<MainLift, number> = {
   ohp: 65,
   bench: 95,
   hang_clean: 95,
+  weighted_pullup: 0, // added weight on a belt; 0 = bodyweight
 }
 
 export interface Exercise {
@@ -94,7 +103,6 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
     title: 'Deadlift + Pull-ups',
     exercises: [
       { key: 'deadlift', name: 'Deadlift', category: 'main', sets: 3, reps: '5', lift: 'deadlift' },
-      { key: 'pullups', name: 'Pull-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
       { key: 'walking_lunge', name: 'DB Walking Lunge — build strength', category: 'accessory', sets: 4, reps: '8 / leg' },
       { key: 'kb_swing', name: 'KB Swing (hip hinge power)', category: 'accessory', sets: 3, reps: '12' },
       { key: 'single_arm_row', name: 'Single-Arm DB Row', category: 'accessory', sets: 3, reps: '10 / side' },
@@ -137,14 +145,15 @@ export const WEEKLY_PLAN: Record<DayKey, DayPlan> = {
   sat: {
     key: 'sat',
     label: 'Saturday',
-    title: 'Hang Clean + Pull-ups',
+    title: 'Pull-Ups & Grip',
     exercises: [
       { key: 'hang_clean', name: 'Hang Clean', category: 'main', sets: 5, reps: '3', lift: 'hang_clean' },
-      { key: 'pullups', name: 'Pull-ups', category: 'bodyweight', sets: 3, reps: 'AMRAP' },
-      { key: 'front_rack_lunge', name: 'Front-Racked KB Reverse Lunge — build strength', category: 'accessory', sets: 3, reps: '8 / leg' },
-      { key: 'kb_pressout', name: 'Half-Kneeling KB Press-Out', category: 'abs', sets: 3, reps: '10 / side' },
-      { key: 'kb_russian_twist', name: 'KB Russian Twist', category: 'abs', sets: 3, reps: '12 / side' },
-      { key: 'farmer_carry', name: "Farmer's Carry (DB/KB)", category: 'accessory', sets: 3, reps: '40 yd' },
+      { key: 'weighted_pullup', name: 'Weighted Pull-up — build strength', category: 'main', sets: 5, reps: '3', lift: 'weighted_pullup' },
+      { key: 'pullups', name: 'Pull-ups — max reps', category: 'bodyweight', sets: 4, reps: 'AMRAP' },
+      { key: 'chinups', name: 'Chin-ups / Neutral-Grip Pull-ups', category: 'accessory', sets: 3, reps: '8' },
+      { key: 'single_arm_row', name: 'Single-Arm DB Row', category: 'accessory', sets: 3, reps: '10 / side' },
+      { key: 'farmer_carry', name: "Farmer's Carry — heavy (grip)", category: 'accessory', sets: 4, reps: '40 yd' },
+      { key: 'dead_hang', name: 'Dead Hang (grip endurance)', category: 'accessory', sets: 3, reps: 'max hold' },
     ],
   },
   sun: {
