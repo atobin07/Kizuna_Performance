@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Bell, BellOff, Trash2, Plus, Loader2 } from 'lucide-react'
+import { Bell, BellOff, Trash2, Plus, Loader2, Send } from 'lucide-react'
 import {
   enablePush,
   disablePush,
@@ -117,6 +117,7 @@ export function NotificationSettings({
   const [supported, setSupported] = useState(true)
   const [subscribed, setSubscribed] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [testing, setTesting] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>(initialReminders)
 
   useEffect(() => {
@@ -158,6 +159,30 @@ export function NotificationSettings({
       toast({ title: 'Notifications off', description: 'This device won’t get reminders.' })
     } finally {
       setBusy(false)
+    }
+  }
+
+  async function sendTest() {
+    setTesting(true)
+    try {
+      const res = await fetch('/api/push/test', { method: 'POST' })
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        toast({
+          variant: 'destructive',
+          title: 'Test failed',
+          description: json?.error ?? 'Could not send.',
+        })
+        return
+      }
+      toast({
+        title: 'Test sent',
+        description: 'Watch for the banner. If nothing shows, check your device notification settings.',
+      })
+    } catch {
+      toast({ variant: 'destructive', title: 'Test failed', description: 'Network error.' })
+    } finally {
+      setTesting(false)
     }
   }
 
@@ -223,10 +248,16 @@ export function NotificationSettings({
           </div>
           {supported &&
             (subscribed ? (
-              <Button variant="outline" onClick={handleDisable} disabled={busy}>
-                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <BellOff className="h-4 w-4" />}
-                Turn off
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={sendTest} disabled={testing}>
+                  {testing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  Send test
+                </Button>
+                <Button variant="outline" onClick={handleDisable} disabled={busy}>
+                  {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <BellOff className="h-4 w-4" />}
+                  Turn off
+                </Button>
+              </div>
             ) : (
               <Button onClick={handleEnable} disabled={busy || !vapidPublicKey}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
