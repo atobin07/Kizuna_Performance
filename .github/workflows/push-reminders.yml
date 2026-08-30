@@ -1,0 +1,28 @@
+name: Push reminders
+
+# Fires the reminder-send endpoint on a schedule. The endpoint decides which
+# reminders are actually due (per user, per timezone) and de-duplicates via
+# last_sent_on, so running a bit often is safe. GitHub cron granularity is
+# best-effort and can be delayed under load — the 20-min send window in the
+# endpoint absorbs small drifts.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger reminder send
+        run: |
+          code=$(curl -s -o /tmp/out.txt -w "%{http_code}" \
+            -X POST "https://www.kizunaperformance.com/api/push/send" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+          echo "HTTP $code"
+          cat /tmp/out.txt
+          if [ "$code" != "200" ]; then
+            echo "Send endpoint returned $code"
+            exit 1
+          fi

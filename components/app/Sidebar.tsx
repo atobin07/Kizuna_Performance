@@ -17,6 +17,7 @@ import {
   UtensilsCrossed,
   Moon,
   Plug,
+  Bell,
   Menu,
   X,
 } from 'lucide-react'
@@ -38,6 +39,7 @@ const ICONS = {
   integrations: Plug,
   messages: MessageSquare,
   assessments: ClipboardCheck,
+  notifications: Bell,
   coach: Shield,
 } as const
 

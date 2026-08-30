@@ -3,29 +3,18 @@
 import { useEffect } from 'react'
 
 /**
- * We no longer use a caching service worker (it caused stale "failed to load"
- * pages after deploys). This component just cleans up: it unregisters any
- * previously-installed worker and clears its caches, so the app always loads
- * the latest version from the network — no reinstalls needed for updates.
+ * Registers the push-only service worker (public/sw.js). That worker has no
+ * fetch handler, so it never caches pages — it only receives Web Push messages
+ * and shows notifications. Registering it also clears any caches left by the
+ * old caching worker (see sw.js activate), so the app still always loads the
+ * latest version from the network.
  */
 export function PWARegister() {
   useEffect(() => {
-    try {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .getRegistrations()
-          .then((regs) => regs.forEach((r) => r.unregister()))
-          .catch(() => {})
-      }
-      if (typeof caches !== 'undefined') {
-        caches
-          .keys()
-          .then((keys) => keys.forEach((k) => caches.delete(k)))
-          .catch(() => {})
-      }
-    } catch {
-      // ignore
-    }
+    if (!('serviceWorker' in navigator)) return
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // ignore — notifications simply won't be available
+    })
   }, [])
   return null
 }

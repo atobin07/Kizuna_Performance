@@ -288,9 +288,38 @@ export type StrengthDeload = {
   created_at: string
 }
 
+export type PushSubscriptionRow = {
+  id: string
+  client_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  user_agent: string | null
+  created_at: string
+}
+
+export type ReminderCategory = 'training' | 'recovery' | 'nutrition' | 'log'
+
+export type Reminder = {
+  id: string
+  client_id: string
+  category: ReminderCategory
+  title: string
+  body: string
+  send_time: string
+  timezone: string
+  days: number[]
+  enabled: boolean
+  last_sent_on: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
+      push_subscriptions: TableDef<PushSubscriptionRow>
+      reminders: TableDef<Reminder>
       strength_config: TableDef<StrengthConfig>
       strength_sessions: TableDef<StrengthSession>
       strength_entries: TableDef<StrengthEntry>

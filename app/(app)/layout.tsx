@@ -33,6 +33,7 @@ export default async function AppLayout({
     { href: '/integrations', label: 'Integrations', icon: 'integrations' },
     { href: '/messages', label: 'Messages', icon: 'messages' },
     { href: '/assessments', label: 'Assessments', icon: 'assessments' },
+    { href: '/notifications', label: 'Notifications', icon: 'notifications' },
   ]
 
   if (role === 'coach' || role === 'admin') {
