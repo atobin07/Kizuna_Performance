@@ -4,14 +4,31 @@ import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ProgressRing } from '@/components/app/ProgressRing'
+import { StrengthDay } from '@/components/app/StrengthDay'
 import { formatDate } from '@/lib/utils'
 import {
   computeStreak,
   todayISO,
   startOfISOWeekISO,
 } from '@/lib/dates'
-import type { Benchmark } from '@/lib/supabase/types'
-import { Flame, MessageSquare, Dumbbell, BookOpen } from 'lucide-react'
+import {
+  WEEKLY_PLAN,
+  dayKeyForDate,
+  weeksElapsed,
+  resolveDay,
+  parseBaseWeights,
+  parseIncrements,
+  type MainLift,
+  type DeloadEvent,
+} from '@/lib/strength'
+import type {
+  Benchmark,
+  StrengthConfig,
+  StrengthEntry,
+  StrengthSession,
+  StrengthDeload,
+} from '@/lib/supabase/types'
+import { Flame, MessageSquare, Dumbbell, BookOpen, TrendingUp } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -91,6 +108,51 @@ export default async function DashboardPage() {
   const unreadCount = unreadRows?.length ?? 0
   const latestUnread = unreadRows?.[0] ?? null
 
+  // (f) Today's strength checklist — same data the /strength page uses, so it
+  // can be checked off right here without navigating.
+  const [{ data: configData }, { data: deloadRows }, { data: entryRows }, { data: sessionRow }] =
+    await Promise.all([
+      supabase.from('strength_config').select('*').eq('client_id', user.id).maybeSingle(),
+      supabase
+        .from('strength_deloads')
+        .select('lift, effective_date, baseline_week, new_baseline')
+        .eq('client_id', user.id)
+        .order('effective_date', { ascending: true }),
+      supabase.from('strength_entries').select('*').eq('client_id', user.id).eq('log_date', today),
+      supabase
+        .from('strength_sessions')
+        .select('notes')
+        .eq('client_id', user.id)
+        .eq('log_date', today)
+        .maybeSingle(),
+    ])
+
+  const strengthConfig = configData as StrengthConfig | null
+  const strengthStart = strengthConfig?.start_date ?? today
+  const baseWeights = parseBaseWeights(strengthConfig?.base_weights)
+  const increments = parseIncrements(strengthConfig?.increments)
+  const deloads: DeloadEvent[] = ((deloadRows ?? []) as StrengthDeload[]).map((d) => ({
+    lift: d.lift as MainLift,
+    effective_date: d.effective_date,
+    baseline_week: d.baseline_week,
+    new_baseline: Number(d.new_baseline),
+  }))
+  const todayEntries: Record<string, StrengthEntry> = {}
+  for (const e of (entryRows ?? []) as StrengthEntry[]) todayEntries[e.exercise_key] = e
+
+  const todayKey = dayKeyForDate(new Date())
+  const todayPlan = WEEKLY_PLAN[todayKey]
+  const todayExercises = resolveDay(
+    todayPlan,
+    baseWeights,
+    strengthStart,
+    today,
+    deloads,
+    increments
+  )
+  const todayIsRest = todayExercises.length === 0
+  const todayNotes = ((sessionRow as StrengthSession | null)?.notes) ?? ''
+
   return (
     <div className="space-y-8">
       <div>
@@ -128,6 +190,40 @@ export default async function DashboardPage() {
               </Link>
               .
             </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Today's strength checklist — check off without leaving the dashboard */}
+      <Card className="border-kin/30">
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider">
+            <TrendingUp className="h-4 w-4 text-kin" /> Today&apos;s training
+          </CardTitle>
+          <Link
+            href="/strength"
+            className="text-xs uppercase tracking-wider text-kin hover:underline"
+          >
+            Full week →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4 text-lg font-semibold text-washi">{todayPlan.title}</p>
+          {todayIsRest ? (
+            <p className="text-sm text-muted-foreground">
+              Rest day — recover, hydrate, get your sleep. Nothing to log.
+            </p>
+          ) : (
+            <StrengthDay
+              clientId={user.id}
+              logDate={today}
+              logWeek={weeksElapsed(strengthStart, today)}
+              dayKey={todayKey}
+              exercises={todayExercises}
+              increments={increments}
+              initialEntries={todayEntries}
+              initialNotes={todayNotes}
+            />
           )}
         </CardContent>
       </Card>
