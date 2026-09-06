@@ -3,9 +3,11 @@ import { redirect } from 'next/navigation'
 import { todayISO } from '@/lib/dates'
 import { can, type Plan } from '@/lib/plan'
 import { FoodLogger } from '@/components/app/FoodLogger'
+import { QuickAddFood } from '@/components/app/QuickAddFood'
 import { DeleteFoodLogButton } from '@/components/app/DeleteFoodLogButton'
 import { UpgradeCard } from '@/components/app/UpgradeCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import type { FoodLog, NutritionTarget } from '@/lib/supabase/types'
 import { MEAL_ORDER, MEAL_LABELS } from '@/lib/utils'
@@ -127,7 +129,18 @@ export default async function FoodPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <FoodLogger clientId={user.id} />
+            <Tabs defaultValue="quick">
+              <TabsList>
+                <TabsTrigger value="quick">Quick add</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+              </TabsList>
+              <TabsContent value="quick">
+                <QuickAddFood clientId={user.id} />
+              </TabsContent>
+              <TabsContent value="custom">
+                <FoodLogger clientId={user.id} />
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 
