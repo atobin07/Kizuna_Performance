@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { todayISO } from '@/lib/dates'
 import { can, type Plan } from '@/lib/plan'
 import { FoodLogger } from '@/components/app/FoodLogger'
+import { DeleteFoodLogButton } from '@/components/app/DeleteFoodLogButton'
 import { UpgradeCard } from '@/components/app/UpgradeCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -160,7 +161,7 @@ export default async function FoodPage() {
                     {items.map((item) => (
                       <li
                         key={item.id}
-                        className="flex items-center justify-between text-sm"
+                        className="flex items-center justify-between gap-2 text-sm"
                       >
                         <span className="text-washi">
                           {item.name}
@@ -171,8 +172,11 @@ export default async function FoodPage() {
                             </span>
                           )}
                         </span>
-                        <span className="font-mono text-muted-foreground">
-                          {item.calories != null ? `${Math.round(Number(item.calories))} kcal` : '—'}
+                        <span className="flex shrink-0 items-center gap-2">
+                          <span className="font-mono text-muted-foreground">
+                            {item.calories != null ? `${Math.round(Number(item.calories))} kcal` : '—'}
+                          </span>
+                          <DeleteFoodLogButton id={item.id} />
                         </span>
                       </li>
                     ))}
