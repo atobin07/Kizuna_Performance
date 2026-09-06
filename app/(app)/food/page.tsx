@@ -1,15 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { todayISO } from '@/lib/dates'
-import { can, type Plan } from '@/lib/plan'
+import { todayISO, lastNDays } from '@/lib/dates'
+import { can, historyWindowDays, type Plan } from '@/lib/plan'
 import { FoodLogger } from '@/components/app/FoodLogger'
 import { QuickAddFood } from '@/components/app/QuickAddFood'
 import { DeleteFoodLogButton } from '@/components/app/DeleteFoodLogButton'
 import { UpgradeCard } from '@/components/app/UpgradeCard'
+import { BenchmarkChart } from '@/components/app/BenchmarkChart'
+import { CalorieLiftChart } from '@/components/app/CalorieLiftChart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import type { FoodLog, NutritionTarget } from '@/lib/supabase/types'
+import type { FoodLog, NutritionTarget, StrengthEntry } from '@/lib/supabase/types'
 import { MEAL_ORDER, MEAL_LABELS } from '@/lib/utils'
 
 export const metadata = { title: 'Food' }
@@ -46,6 +48,50 @@ export default async function FoodPage() {
   const plan = (profile?.plan ?? 'base') as Plan
   const logs = (logsData ?? []) as FoodLog[]
   const target = (targetData ?? null) as NutritionTarget | null
+
+  // History for the daily-calories chart + the calories-vs-lifts comparison,
+  // mirroring how /strength windows and plots its progression charts.
+  const window = historyWindowDays(plan)
+  const days = lastNDays(window ?? 180)
+  const since = days[0]
+
+  const [{ data: historyFoodRows }, { data: historyLiftRows }] = await Promise.all([
+    supabase
+      .from('food_logs')
+      .select('log_date, calories')
+      .eq('client_id', user.id)
+      .gte('log_date', since),
+    supabase
+      .from('strength_entries')
+      .select('log_date, actual_weight')
+      .eq('client_id', user.id)
+      .eq('category', 'main')
+      .gte('log_date', since),
+  ])
+
+  const caloriesByDate = new Map<string, number>()
+  for (const row of (historyFoodRows ?? []) as Pick<FoodLog, 'log_date' | 'calories'>[]) {
+    caloriesByDate.set(row.log_date, (caloriesByDate.get(row.log_date) ?? 0) + (Number(row.calories) || 0))
+  }
+
+  const liftWeightByDate = new Map<string, number>()
+  for (const row of (historyLiftRows ?? []) as Pick<StrengthEntry, 'log_date' | 'actual_weight'>[]) {
+    if (row.actual_weight == null) continue
+    liftWeightByDate.set(
+      row.log_date,
+      (liftWeightByDate.get(row.log_date) ?? 0) + Number(row.actual_weight)
+    )
+  }
+
+  const dailyCalorieChartData = days.map((d) => ({
+    date: d,
+    value: Math.round(caloriesByDate.get(d) ?? 0),
+  }))
+  const calorieLiftChartData = days.map((d) => ({
+    date: d,
+    calories: Math.round(caloriesByDate.get(d) ?? 0),
+    liftWeight: Math.round(liftWeightByDate.get(d) ?? 0),
+  }))
 
   const totals = {
     calories: Math.round(sum(logs, 'calories')),
@@ -200,6 +246,39 @@ export default async function FoodPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Daily calorie trend + comparison against lift progression */}
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base uppercase tracking-wider">
+              Daily calories
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BenchmarkChart data={dailyCalorieChartData} unit="kcal" movement="Calories" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base uppercase tracking-wider">
+              Calories vs. lifts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CalorieLiftChart data={calorieLiftChartData} />
+          </CardContent>
+        </Card>
+      </div>
+
+      {window != null && (
+        <UpgradeCard
+          requiredPlan="track"
+          title="Unlock full calorie history"
+          blurb={`You can view the last ${window} days of calorie trends. Upgrade for unlimited history.`}
+        />
+      )}
 
       {!can(plan, 'integrations') && (
         <UpgradeCard
