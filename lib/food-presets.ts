@@ -27,6 +27,7 @@ export const FOOD_PRESETS: FoodPreset[] = [
   { key: 'overnight_oats', name: 'Overnight oats bottle', quantity: '1', calories: 250, protein_g: 10, carbs_g: 35, fat_g: 8 },
   { key: 'hashbrowns', name: 'Hashbrowns', quantity: '1 serving', calories: 150, protein_g: 2, carbs_g: 15, fat_g: 9 },
   { key: 'kodiak_cup', name: 'Kodiak on the go cup', quantity: '1', calories: 250, protein_g: 14, carbs_g: 33, fat_g: 6 },
+  { key: 'granola_half_cup', name: 'Granola', quantity: '1/2 cup', calories: 240, protein_g: 5, carbs_g: 33, fat_g: 9 },
   { key: 'banana', name: 'Banana', quantity: '1', calories: 105, protein_g: 1, carbs_g: 27, fat_g: 0 },
   { key: 'avocado', name: 'Avocado', quantity: '1 whole', calories: 250, protein_g: 3, carbs_g: 13, fat_g: 22 },
   { key: 'wawa_burrito', name: 'Wawa breakfast burrito', quantity: '1', calories: 600, protein_g: 24, carbs_g: 42, fat_g: 34 },
